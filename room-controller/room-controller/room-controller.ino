@@ -12,13 +12,28 @@ void setup() {
   pinMode(LEDPIN, OUTPUT);
   myservo.attach(SERVO);
   Serial.begin(9600);
+  delay(1000);
 }
 
-
+bool flag = false;
 void loop() {
-  Serial.println("Inserisci un comando:");
-  while (!Serial.available()) {}     //wait for data available
+  Serial.write("Halleluja\n");
+  delay(3000);
+  digitalWrite(LEDPIN, flag);
+  flag = !flag;
+  /*bool flag = false;
+  //Serial.println("Inserisci un comando:");
+  while (!Serial.available()) {
+    digitalWrite(LEDPIN, flag);
+    flag = !flag;
+    delay(500);
+  }     //wait for data available
   String teststr = Serial.readString();  //read until timeout
+  if (teststr != NULL) {
+    digitalWrite(LEDPIN, HIGH);
+    delay(5000);
+    Serial.write("pong");
+  }
   teststr.trim();
   bool flag = true;
   for (int i = 1; i < teststr.length(); i++) {
@@ -41,5 +56,5 @@ void loop() {
     digitalWrite(LEDPIN, LOW);
   } else {
     Serial.println("Comando errato, ritenta..");
-  }
+  }*/
 }
