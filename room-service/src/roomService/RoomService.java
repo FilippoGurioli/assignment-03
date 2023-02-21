@@ -50,8 +50,12 @@ public class RoomService {
 		   
 		});
 		while (true) {
+			comPort.writeBytes("0\n  ".getBytes(), "0\n  ".getBytes().length);
+			comPort.writeBytes("ON\n ".getBytes(), "ON\n ".getBytes().length);
 			try { Thread.sleep(5000); } catch (Exception e) { e.printStackTrace(); }
-			comPort.writeBytes("ciao".getBytes(), "ciao".length());
+			comPort.writeBytes("180\n".getBytes(), "180\n".getBytes().length);
+			comPort.writeBytes("OFF\n".getBytes(), "OFF\n".getBytes().length);
+			try { Thread.sleep(5000); } catch (Exception e) { e.printStackTrace(); }
 		}
 		//comPort.closePort();
 		//System.out.println("Disconnected from " + comPort + " port");
