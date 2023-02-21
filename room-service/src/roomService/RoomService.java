@@ -51,7 +51,7 @@ public class RoomService {
 		});
 		while (true) {
 			try { Thread.sleep(5000); } catch (Exception e) { e.printStackTrace(); }
-			comPort.writeBytes("ciao".getBytes(), 1000);
+			comPort.writeBytes("ciao".getBytes(), "ciao".length());
 		}
 		//comPort.closePort();
 		//System.out.println("Disconnected from " + comPort + " port");

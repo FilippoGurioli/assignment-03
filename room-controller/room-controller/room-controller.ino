@@ -17,16 +17,12 @@ void setup() {
 
 const int BUFFER_SIZE = 20;
 char buffer[BUFFER_SIZE];
-int i = 0;
 void loop() {
   bool flag = false;
   Serial.print("Inserisci un comando:");
-  Serial.println(i++);
   while (!Serial.available()) {}     //wait for data available
-  Serial.println(Serial.available());
   int rlen = Serial.readBytes(buffer, BUFFER_SIZE);
-  Serial.end();
-  Serial.begin(9600);
+  Serial.println(buffer);
   /*String info = "";
   for(int i = 0; i < rlen; i++)
     info += buffer[i];
