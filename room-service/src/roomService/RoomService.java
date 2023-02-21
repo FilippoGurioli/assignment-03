@@ -49,6 +49,9 @@ public class RoomService {
 			}
 		   
 		});
+		//Communication Protocol: 
+		//the info must be always the same size -> take the largest info as a reference, the other must fill the extra space with white spaces (" ")
+		//the info must end with new line (\n)
 		while (true) {
 			comPort.writeBytes("0\n  ".getBytes(), "0\n  ".getBytes().length);
 			comPort.writeBytes("ON\n ".getBytes(), "ON\n ".getBytes().length);
