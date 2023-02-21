@@ -15,43 +15,43 @@ void setup() {
   delay(1000);
 }
 
-bool flag = false;
+const int BUFFER_SIZE = 20;
+char buffer[BUFFER_SIZE];
+int i = 0;
 void loop() {
-  Serial.write("Halleluja\n");
-  delay(3000);
-  digitalWrite(LEDPIN, flag);
-  flag = !flag;
-  /*bool flag = false;
-  //Serial.println("Inserisci un comando:");
-  while (!Serial.available()) {
-    digitalWrite(LEDPIN, flag);
-    flag = !flag;
-    delay(500);
-  }     //wait for data available
-  String teststr = Serial.readString();  //read until timeout
-  if (teststr != NULL) {
-    digitalWrite(LEDPIN, HIGH);
-    delay(5000);
-    Serial.write("pong");
-  }
-  teststr.trim();
-  bool flag = true;
-  for (int i = 1; i < teststr.length(); i++) {
-    if (!isDigit(teststr.charAt(i))) {
+  bool flag = false;
+  Serial.print("Inserisci un comando:");
+  Serial.println(i++);
+  while (!Serial.available()) {}     //wait for data available
+  Serial.println(Serial.available());
+  int rlen = Serial.readBytes(buffer, BUFFER_SIZE);
+  Serial.end();
+  Serial.begin(9600);
+  /*String info = "";
+  for(int i = 0; i < rlen; i++)
+    info += buffer[i];
+  if (info != NULL) {
+    info.trim();
+    Serial.println("Ricevuto: ");
+    Serial.println(info);
+  }*/
+  /*flag = true;
+  for (int i = 1; i < info.length(); i++) {
+    if (!isDigit(info.charAt(i))) {
       flag = false;
     }
   }
 
-  if (flag && (isDigit(teststr.charAt(0)) || teststr.charAt(0) == '-')) {
-    int val = teststr.toInt();
+  if (flag && (isDigit(info.charAt(0)) || info.charAt(0) == '-')) {
+    int val = info.toInt();
     val = (val >= 0 ? (val <= 180 ? val : 180) : 0);
     Serial.print("Rotazione servo di ");
     Serial.println(val);
     myservo.write(val);
-  } else if (teststr == "ON") {
+  } else if (info == "ON") {
     Serial.println("Accensione led");
     digitalWrite(LEDPIN, HIGH);
-  } else if (teststr == "OFF") {
+  } else if (info == "OFF") {
     Serial.println("Spegnimento led");
     digitalWrite(LEDPIN, LOW);
   } else {

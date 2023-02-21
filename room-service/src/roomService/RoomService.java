@@ -1,5 +1,7 @@
 package roomService;
 
+import java.nio.charset.StandardCharsets;
+
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
@@ -31,17 +33,6 @@ public class RoomService {
 			throw new Exception(); //da modificare con un'eccezione più specifica
 		}
 		
-		/*comPort.addDataListener(new SerialPortDataListener() {
-		   @Override
-		   public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_WRITTEN; }
-		   @Override
-		   public void serialEvent(final SerialPortEvent event)
-		   {
-		      if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_WRITTEN)
-		         System.out.println("All bytes were successfully transmitted!");
-		   }
-		});*/
-		
 		comPort.addDataListener(new SerialPortDataListener() {
 		   @Override
 		   public int getListeningEvents() {
@@ -51,15 +42,17 @@ public class RoomService {
 		   @Override
 			public void serialEvent(final SerialPortEvent event) {
 				if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED) {
-					System.out.println("Palle");
+					System.out.print(new String(event.getReceivedData(), StandardCharsets.UTF_8));
 				} else if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_WRITTEN) {
-					System.out.println("All bytes were successfully transmitted!");
+					//System.out.println("All bytes were successfully transmitted!");
 				}
 			}
 		   
 		});
-		comPort.writeBytes("ping".getBytes(), 1000);
-		//try { Thread.sleep(20000); } catch (Exception e) { e.printStackTrace(); }
+		while (true) {
+			try { Thread.sleep(5000); } catch (Exception e) { e.printStackTrace(); }
+			comPort.writeBytes("ciao".getBytes(), 1000);
+		}
 		//comPort.closePort();
 		//System.out.println("Disconnected from " + comPort + " port");
 		
