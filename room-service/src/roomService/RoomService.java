@@ -24,9 +24,12 @@ public class RoomService {
 			throw new Exception(); //da modificare con un'eccezione più specifica
 		}
 		comPort.setComPortParameters(BAUD_RATE, Byte.SIZE, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
-		comPort.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0);
-		System.out.println("Connected to " + comPort + " port");
-		comPort.openPort();
+		if (comPort.openPort()) {			
+			System.out.println("Connected to " + comPort + " port");
+		} else {
+			System.err.println("CannotOpenPortException.");
+			throw new Exception(); //da modificare con un'eccezione più specifica
+		}
 		
 		/*comPort.addDataListener(new SerialPortDataListener() {
 		   @Override
@@ -42,18 +45,20 @@ public class RoomService {
 		comPort.addDataListener(new SerialPortDataListener() {
 		   @Override
 		   public int getListeningEvents() {
-			   return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
+			   return SerialPort.LISTENING_EVENT_DATA_RECEIVED | SerialPort.LISTENING_EVENT_DATA_WRITTEN;
 		   }
 
 		   @Override
-			public void serialEvent(SerialPortEvent event) {
+			public void serialEvent(final SerialPortEvent event) {
 				if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED) {
 					System.out.println("Palle");
+				} else if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_WRITTEN) {
+					System.out.println("All bytes were successfully transmitted!");
 				}
 			}
 		   
 		});
-		//comPort.writeBytes("ping".getBytes(), 1000);
+		comPort.writeBytes("ping".getBytes(), 1000);
 		//try { Thread.sleep(20000); } catch (Exception e) { e.printStackTrace(); }
 		//comPort.closePort();
 		//System.out.println("Disconnected from " + comPort + " port");
