@@ -21,8 +21,6 @@ void SerialPortImpl::notifyInterrupt(int pin){
         Event* ev;
         if (isDataAvailable()){
           ev = new DataAvailable(this);
-        } else {
-          ev = new ButtonReleased(this);
         }
         this->generateEvent(ev);
   }

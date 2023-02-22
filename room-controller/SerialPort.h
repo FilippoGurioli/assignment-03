@@ -24,17 +24,4 @@ private:
   SerialPort* source;  
 };
 
-class ButtonReleased: public Event {
-public:
-  ButtonReleased(SerialPort* source) : Event(BUTTON_RELEASED_EVENT){
-    this->source = source;  
-  } 
- 
-  SerialPort* getSource(){
-    return source;
-  } 
-private:
-  SerialPort* source;  
-};
-
 #endif

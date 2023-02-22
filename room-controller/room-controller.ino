@@ -5,9 +5,9 @@
 #define LED_PIN 13
 #define BUTTON_PIN 7
 
-class ButtonLedAsyncFSM : public AsyncFSM {
+class EventHandler : public AsyncFSM {
   public:
-    ButtonLedAsyncFSM(SerialPort* comPort, Led* led){
+    EventHandler(SerialPort* comPort, Led* led){
       count = 0;  
       currentState = OFF;
       this->comPort = comPort;
@@ -43,14 +43,14 @@ class ButtonLedAsyncFSM : public AsyncFSM {
     enum  { ON, OFF} currentState;
 };
 
-ButtonLedAsyncFSM* myAsyncFSM;
+EventHandler* eventHandler;
 
 void setup() {
   SerialPort* comPort = new SerialPortImpl(BUTTON_PIN);
   Led* led = new Led(LED_PIN);
-  myAsyncFSM = new ButtonLedAsyncFSM(comPort, led);
+  eventHandler = new EventHandler(comPort, led);
 }
 
 void loop() {
-  myAsyncFSM->checkEvents();
+  eventHandler->checkEvents();
 }
