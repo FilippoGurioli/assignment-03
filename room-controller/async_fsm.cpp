@@ -49,7 +49,7 @@ InterruptDispatcher::InterruptDispatcher(){
     
 void InterruptDispatcher::bind(int pin, EventSource* src){
   sourceRegisteredOnPin[pin] = src;
-  enableInterrupt(pin, notifyFunctions[pin], CHANGE);  
+  enableInterrupt(pin, notifyFunctions[pin], CHANGE);
 }
 
 void InterruptDispatcher::notifyInterrupt(int pin){

@@ -54,10 +54,14 @@ public class RoomService {
 		//the info must end with new line (\n)
 		while (true) {
 			comPort.writeBytes("0\n  ".getBytes(), "0\n  ".getBytes().length);
+			System.out.println("Sent \"0\"");
 			comPort.writeBytes("ON\n ".getBytes(), "ON\n ".getBytes().length);
+			System.out.println("Sent \"ON\"");
 			try { Thread.sleep(5000); } catch (Exception e) { e.printStackTrace(); }
 			comPort.writeBytes("180\n".getBytes(), "180\n".getBytes().length);
+			System.out.println("Sent \"180\"");
 			comPort.writeBytes("OFF\n".getBytes(), "OFF\n".getBytes().length);
+			System.out.println("Sent \"OFF\"");
 			try { Thread.sleep(5000); } catch (Exception e) { e.printStackTrace(); }
 		}
 		//comPort.closePort();
