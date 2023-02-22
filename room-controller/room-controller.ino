@@ -1,40 +1,36 @@
 #include "async_fsm.h"
-#include "buttonImpl.h"
+#include "SerialPortImpl.h"
 #include "led.h"
-#include "console.h"
 
 #define LED_PIN 13
 #define BUTTON_PIN 7
 
 class ButtonLedAsyncFSM : public AsyncFSM {
   public:
-    ButtonLedAsyncFSM(Button* button, Led* led, Console* console){
+    ButtonLedAsyncFSM(SerialPort* comPort, Led* led){
       count = 0;  
       currentState = OFF;
-      this->button = button;
+      this->comPort = comPort;
       this->led = led;
-      this->console = console;
       led->switchOff();
-      button->registerObserver(this);
+      comPort->registerObserver(this);
     }
   
     void handleEvent(Event* ev) {
       switch (currentState) {
       case OFF:  
-        if (ev->getType() == BUTTON_PRESSED_EVENT){
-          console->log("ON");
+        if (ev->getType() == DATA_AVAILABLE_EVENT){
+          delay(20);
           led->switchOn();
           count = count + 1;
-          console->log(count);
           currentState = ON;
         }
         break; 
       case ON: 
         if (ev->getType() == BUTTON_RELEASED_EVENT){
-          console->log("OFF");
+          delay(20);
           led->switchOff();
           count = count + 1;
-          console->log(count);
           currentState = OFF;
         }
       }
@@ -42,19 +38,17 @@ class ButtonLedAsyncFSM : public AsyncFSM {
 
   private:
     int count; 
-    Button* button;
+    SerialPort* comPort;
     Led* led;
-    Console* console;
     enum  { ON, OFF} currentState;
 };
 
 ButtonLedAsyncFSM* myAsyncFSM;
 
 void setup() {
-  Button* button = new ButtonImpl(BUTTON_PIN);
+  SerialPort* comPort = new SerialPortImpl(BUTTON_PIN);
   Led* led = new Led(LED_PIN);
-  Console* console = new Console();
-  myAsyncFSM = new ButtonLedAsyncFSM(button, led, console);
+  myAsyncFSM = new ButtonLedAsyncFSM(comPort, led);
 }
 
 void loop() {

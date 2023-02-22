@@ -1,26 +1,26 @@
-#include "ButtonImpl.h"
+#include "SerialPortImpl.h"
 #include "Arduino.h"
 
 #define DEBOUNCING_TIME 20
 
-ButtonImpl::ButtonImpl(int pin){
+SerialPortImpl::SerialPortImpl(int pin){
   this->pin = pin;
   pinMode(pin, INPUT);  
   bindInterrupt(pin);
   lastEventTime = millis();
 } 
   
-bool ButtonImpl::isPressed(){
+bool SerialPortImpl::isDataAvailable(){
   return digitalRead(pin) == HIGH;
 }
 
-void ButtonImpl::notifyInterrupt(int pin){
+void SerialPortImpl::notifyInterrupt(int pin){
   long curr = millis();
   if (curr - lastEventTime > DEBOUNCING_TIME){
         lastEventTime = curr;
         Event* ev;
-        if (isPressed()){
-          ev = new ButtonPressed(this);
+        if (isDataAvailable()){
+          ev = new DataAvailable(this);
         } else {
           ev = new ButtonReleased(this);
         }

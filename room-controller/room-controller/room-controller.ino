@@ -4,9 +4,7 @@
 #define LEDPIN 2
 #define SERVO 3
 
-bool a = false;
 Servo myservo;
-int deg = 0;
 
 void setup() {
   pinMode(LEDPIN, OUTPUT);
