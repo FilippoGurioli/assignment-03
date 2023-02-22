@@ -64,8 +64,5 @@ public class RoomService {
 			System.out.println("Sent \"OFF\"");
 			try { Thread.sleep(5000); } catch (Exception e) { e.printStackTrace(); }
 		}
-		//comPort.closePort();
-		//System.out.println("Disconnected from " + comPort + " port");
-		
 	}
 }
