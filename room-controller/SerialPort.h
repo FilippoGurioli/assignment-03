@@ -17,7 +17,7 @@ class DataAvailable : public Event {
         }
 
         SerialPort* getSource() {
-            return source;
+            return this->source;
         }
 
     private:

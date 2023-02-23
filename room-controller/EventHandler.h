@@ -5,7 +5,7 @@
 #include "Led.h"
 #include "SerialPortImpl.h"
 
-#include <Servo.h>
+#include <ServoTimer2.h>
 #include <ctype.h>
 
 #define BUFFER_SIZE 40
@@ -17,10 +17,10 @@ class EventHandler : public AsyncFSM {
     Led* led;
     SerialPort* comPort;
     char buffer[BUFFER_SIZE];
-    Servo servo;
+    ServoTimer2 servo;
 
   public:
-    EventHandler(SerialPort* comPort, Led* led, Servo servo){
+    EventHandler(SerialPort* comPort, Led* led, ServoTimer2 servo){
       this->comPort = comPort;
       this->comPort->registerObserver(this);
       this->led = led;
@@ -53,9 +53,10 @@ class EventHandler : public AsyncFSM {
             flag = false;
           }
         }
-        if (flag && (isDigit(commands[i].charAt(0)) || commands[i].charAt(0) == '-')) {
+        char first = commands[i].charAt(0);
+        if (flag && (isDigit(first) || first == '-')) {
           int val = commands[i].toInt();
-          val = (val >= 0 ? (val <= 180 ? val : 180) : 0);
+          val = (val >= 0 ? (val <= 180 ? map(val,0,180,0,2250) : 2250) : 750);
           Serial.println("Servo rotation");
           servo.write(val);
         } else if (commands[i] == "ON") {
@@ -64,8 +65,6 @@ class EventHandler : public AsyncFSM {
         } else if (commands[i] == "OFF") {
           Serial.println("Turning off led");
           led->switchOff();
-        } else {
-          Serial.println("This command does not exist, try again...");
         }
       }
     }
