@@ -66,9 +66,11 @@ class EventHandler : public AsyncFSM {
             servo.write(val);
           } else if (commands[i] == "ON") {
             Serial.println("Turning on led");
+            this->btPort->println("LED is turned on\n");
             led->switchOn();
           } else if (commands[i] == "OFF") {
             Serial.println("Turning off led");
+            this->btPort->println("LED is turned off\n");
             led->switchOff();
           }
         }
@@ -80,19 +82,17 @@ class EventHandler : public AsyncFSM {
           if (ch != -1) {
             msg += (char) ch;
           }
-        } while(ch != '>');
+        } while(ch != '\n');
         Serial.println("Ricevuto: " + msg);
         
         // Control LED in Arduino board
-        if (msg == "<turn on>"){
+        if (msg == "ON\n"){
           this->led->switchOn();
-          Serial.println("LED is turned on\n"); // Then send status message to Android
           this->btPort->println("LED is turned on\n");
           servo.write(750);
         } else {
-          if (msg == "<turn off>"){
+          if (msg == "OFF\n"){
             this->led->switchOff();
-            Serial.println("LED is turned off\n"); // Then send status message to Android
             this->btPort->println("LED is turned off\n");
             servo.write(2250);
           }
