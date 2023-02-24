@@ -28,6 +28,7 @@ public class RoomService {
 		comPort.setComPortParameters(BAUD_RATE, Byte.SIZE, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
 		if (comPort.openPort()) {			
 			System.out.println("Connected to " + comPort + " port");
+			comPort.flushIOBuffers();
 		} else {
 			System.err.println("CannotOpenPortException.");
 			throw new Exception(); //da modificare con un'eccezione più specifica
@@ -55,9 +56,14 @@ public class RoomService {
 		while (true) {
 			try { Thread.sleep(5000); } catch (Exception e) { e.printStackTrace(); }
 			comPort.writeBytes("180\n".getBytes(), "180\n".getBytes().length);
-			System.out.println("Sent \"180\"");
+			System.out.println("\"180\"");
 			comPort.writeBytes("OFF\n".getBytes(), "OFF\n".getBytes().length);
-			System.out.println("Sent \"OFF\"");
+			System.out.println("\"OFF\"");
+			try { Thread.sleep(5000); } catch (Exception e) { e.printStackTrace(); }
+			comPort.writeBytes("0\n  ".getBytes(), "0\n  ".getBytes().length);
+			System.out.println("\"0\"");
+			comPort.writeBytes("ON\n ".getBytes(), "ON\n ".getBytes().length);
+			System.out.println("\"ON\"");
 			try { Thread.sleep(5000); } catch (Exception e) { e.printStackTrace(); }
 		}
 	}
