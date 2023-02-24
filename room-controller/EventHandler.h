@@ -29,7 +29,8 @@ class EventHandler : public AsyncFSM {
     }
   
     void handleEvent(Event* ev) {
-      String commands[MAX_COMMANDS];
+      Serial.println("Evento");
+      /*String commands[MAX_COMMANDS];
       bool flag = true;
       int j = 0;
       int rlen = Serial.readBytes(buffer, BUFFER_SIZE);
@@ -56,7 +57,7 @@ class EventHandler : public AsyncFSM {
         char first = commands[i].charAt(0);
         if (flag && (isDigit(first) || first == '-')) {
           int val = commands[i].toInt();
-          val = (val >= 0 ? (val <= 180 ? map(val,0,180,0,2250) : 2250) : 750);
+          val = (val >= 0 ? (val <= 180 ? map(val,0,180,750,2250) : 2250) : 750);
           Serial.println("Servo rotation");
           servo.write(val);
         } else if (commands[i] == "ON") {
@@ -66,7 +67,7 @@ class EventHandler : public AsyncFSM {
           Serial.println("Turning off led");
           led->switchOff();
         }
-      }
+      }*/
     }
 };
 

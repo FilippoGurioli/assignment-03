@@ -2,12 +2,13 @@
 #include "Led.h"
 #include "SerialPortImpl.h"
 #include "EventHandler.h"
+//#include "BluetoothPortImpl.h"
 
 #include <ServoTimer2.h>
 
 #define SERIAL_IN_PIN 0
 #define SERVOPIN 5
-#define LEDPIN 13
+#define LEDPIN 7
 
 EventHandler* eventHandler;
 
