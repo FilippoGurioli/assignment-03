@@ -1,2 +1,0 @@
-include ':app'
-rootProject.name = "Companion App Course"

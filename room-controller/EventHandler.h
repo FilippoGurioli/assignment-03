@@ -33,69 +33,70 @@ class EventHandler : public AsyncFSM {
     }
   
     void handleEvent(Event* ev) {
-      if (ev->getType() == DATA_AVAILABLE_EVENT) {
-        String commands[MAX_COMMANDS];
-        bool flag = true;
-        int j = 0;
-        int rlen = Serial.readBytes(buffer, BUFFER_SIZE);
-        String info = String(buffer);
-        //Communication Protocol: remove white spaces and separate different instructions
-        String formatted;
-        for (int i = 0; i < info.length(); i++) {
-          if (info.charAt(i) != ' ' && info.charAt(i) != '\n') {
-            formatted += info.charAt(i);
-          }
-          if (info.charAt(i) == '\n') {
-            commands[j++] = formatted;
-            formatted = "";
-          }
-        }
-        //--------------------end of CommP----------------------------------------------
-
-        for (int i = 0; i < MAX_COMMANDS && commands[i] != NULL; i++) {
-          for (j = 1; j < commands[i].length(); j++) {
-            if (!isDigit(commands[i].charAt(j))) {
-              flag = false;
-            }
-          }
-          char first = commands[i].charAt(0);
-          if (flag && (isDigit(first) || first == '-')) {
-            int val = commands[i].toInt();
-            val = (val >= 0 ? (val <= 180 ? map(val,0,180,750,2250) : 2250) : 750);
-            Serial.println("Servo rotation");
-            servo.write(val);
-          } else if (commands[i] == "ON") {
-            Serial.println("Turning on led");
-            led->switchOn();
-          } else if (commands[i] == "OFF") {
-            Serial.println("Turning off led");
-            led->switchOff();
-          }
-        }
-      } else if (ev->getType() == BLUETOOTH_EVENT) {
-        String msg;
+      /*Listening the msg from the right port*/
+      int evType = ev->getType();
+      String msg;
+      if (evType == DATA_AVAILABLE_EVENT) {
+        Serial.readBytes(buffer, BUFFER_SIZE);
+        msg = String(buffer);
+      } else if (evType == BLUETOOTH_EVENT) {
         int ch;
         do {
           ch = this->btPort->readData();
-          if (ch != -1) {
-            msg += (char) ch;
+            if (ch != -1) {
+              msg += (char) ch;
+            }
+          } while(ch != '\n');
+      }
+
+      /*Formatting the msg to something useful to Arduino*/
+      String formatted;
+      int j = 0;
+      String commands[MAX_COMMANDS];
+      for (int i = 0; i < msg.length(); i++) {
+        if (msg.charAt(i) != ' ' && msg.charAt(i) != '\n') {
+          formatted += msg.charAt(i);
+        }
+        if (msg.charAt(i) == '\n') {
+          commands[j++] = formatted;
+          formatted = "";
+        }
+      }
+
+      /*Response for debugging*/
+      Serial.print("Received: ");
+      for (int i = 0; i < MAX_COMMANDS && commands[i] != NULL; i++) {
+        Serial.print(commands[i] + " ");
+      }
+      Serial.print("from ");
+      if (evType == DATA_AVAILABLE_EVENT){
+        Serial.println("Serial Port");
+      } else {
+        Serial.println("BT Port");
+      }
+
+      /*Command handling*/
+      bool flag = true;
+      for (int i = 0; i < MAX_COMMANDS && commands[i] != NULL; i++) {
+        for (j = 1; j < commands[i].length(); j++) {
+          if (!isDigit(commands[i].charAt(j))) {
+            flag = false;
           }
-        } while(ch != '>');
-        Serial.println("Ricevuto: " + msg);
-        
-        // Control LED in Arduino board
-        if (msg == "<turn on>"){
-          this->led->switchOn();
-          Serial.println("LED is turned on\n"); // Then send status message to Android
+        }
+        char first = commands[i].charAt(0);
+        if (flag && (isDigit(first) || first == '-')) {
+          int val = commands[i].toInt();
+          val = (val >= 0 ? (val <= 180 ? map(val,0,180,750,2250) : 2250) : 750);
+          Serial.println("Servo rotation");
+          servo.write(val);
+        } else if (commands[i] == "ON") {
+          Serial.println("Turning on led");
           this->btPort->println("LED is turned on\n");
-          servo.write(750);
-        } else {
-          if (msg == "<turn off>"){
-            this->led->switchOff();
-            Serial.println("LED is turned off\n"); // Then send status message to Android
-            this->btPort->println("LED is turned off\n");
-            servo.write(2250);
-          }
+          led->switchOn();
+        } else if (commands[i] == "OFF") {
+          Serial.println("Turning off led");
+          this->btPort->println("LED is turned off\n");
+          led->switchOff();
         }
       }
     }
