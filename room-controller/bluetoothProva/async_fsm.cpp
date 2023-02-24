@@ -44,14 +44,15 @@ InterruptDispatcher::InterruptDispatcher(){
   notifyFunctions[10] = notifyInterrupt_10;
   notifyFunctions[11] = notifyInterrupt_11;
   notifyFunctions[12] = notifyInterrupt_12;
-  /*notifyFunctions[13] = notifyInterrupt_13;*/   //has to be commented to work with AltSoftSerial
+  /*
+  notifyFunctions[13] = notifyInterrupt_13;*/
 }
     
+
 void InterruptDispatcher::bind(int pin, EventSource* src){
   sourceRegisteredOnPin[pin] = src;
   enableInterrupt(pin, notifyFunctions[pin], CHANGE);
 }
-
 void InterruptDispatcher::notifyInterrupt(int pin){
   Serial.print("");  /* bug/race fix */
   sourceRegisteredOnPin[pin]->notifyInterrupt(pin);
@@ -70,7 +71,7 @@ int Event::getType(){
 /* --------------------- EventSource ------------------- */
   
 void EventSource::bindInterrupt(int pin){
-  interruptDispatcher.bind(pin, this);
+  //interruptDispatcher.bind(pin, this);
 }
 
 void EventSource::generateEvent(Event* ev) {

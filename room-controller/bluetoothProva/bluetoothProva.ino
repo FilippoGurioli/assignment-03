@@ -1,7 +1,6 @@
 const int ledPin = 7; // Built in LED in Arduino board
 String msg,cmd;
 
-
 #include "AltSoftSerial.h"
 #include <ServoTimer2.h>
 
