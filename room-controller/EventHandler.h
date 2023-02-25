@@ -28,17 +28,19 @@ class EventHandler : public AsyncFSM {
       this->btPort = btPort;
       this->btPort->registerObserver(this);
       this->led = led;
-      led->switchOff();
+      this->led->switchOff(); //Default Start: LED off
       this->servo = servo;
+      this->servo.write(2250); //Default Start: servo fully closed (roller blinds closed)
     }
   
     void handleEvent(Event* ev) {
       /*Listening the msg from the right port*/
       int evType = ev->getType();
       String msg;
-      if (evType == DATA_AVAILABLE_EVENT) {
+      /*if (evType == DATA_AVAILABLE_EVENT) {
         Serial.readBytes(buffer, BUFFER_SIZE);
         msg = String(buffer);
+        Serial.println(msg);
       } else if (evType == BLUETOOTH_EVENT) {
         int ch;
         do {
@@ -47,8 +49,15 @@ class EventHandler : public AsyncFSM {
               msg += (char) ch;
             }
           } while(ch != '\n');
-      }
+      }*/
 
+      int ch;
+        do {
+          ch = evType == DATA_AVAILABLE_EVENT ? Serial.read() : evType == BLUETOOTH_EVENT ? this->btPort->readData() : -1;
+          if (ch != -1) {
+            msg += (char) ch;
+          }
+          } while(ch != '\n');
       /*Formatting the msg to something useful to Arduino*/
       String formatted;
       int j = 0;
@@ -98,6 +107,7 @@ class EventHandler : public AsyncFSM {
           this->btPort->println("LED is turned off\n");
           led->switchOff();
         }
+        commands[i] = "";
       }
     }
 };
