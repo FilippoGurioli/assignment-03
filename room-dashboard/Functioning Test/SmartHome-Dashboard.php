@@ -1,8 +1,5 @@
 <?php
     session_start();
-    //header("Access-Control-Allow-Origin: http://localhost:8080/api/data");
-    define("UPLOAD_DIR", "./upload/");
-    define("DEFAULT_DIR", "");
 ?>
 
 <!DOCTYPE html>
@@ -59,31 +56,6 @@
                     <td>23/11/2022</td>
                     <td>11:32</td>
                     <td>Tende aperte al 65% </td>
-                </tr>
-                <tr>
-                    <td>18/08/2022</td>
-                    <td>05:32</td>
-                    <td>Luci accese</td>
-                </tr>
-                <tr>
-                    <td>12/06/2022</td>
-                    <td>18:32</td>
-                    <td>Luci spente</td>
-                </tr>
-                <tr>
-                    <td>23/11/2022</td>
-                    <td>11:32</td>
-                    <td>Tende aperte al 10% </td>
-                </tr>
-                <tr>
-                    <td>18/08/2022</td>
-                    <td>05:32</td>
-                    <td>Luci accese</td>
-                </tr>
-                <tr>
-                    <td>12/06/2022</td>
-                    <td>18:32</td>
-                    <td>Luci spente</td>
                 </tr>
             </table>
         </section>

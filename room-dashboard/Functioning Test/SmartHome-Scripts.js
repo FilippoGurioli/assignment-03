@@ -5,7 +5,7 @@ let btnHistory = document.getElementById("btnHistory");
 
 setup("ON", 90);
 
-//Controls event listeners
+//Controls' event listeners
 btnLights.addEventListener("click", function(event){
     event.preventDefault();
     if(btnLights.value == "OFF"){
@@ -29,13 +29,14 @@ btnControls.addEventListener("click", function(event){
 });
 
 btnHistory.addEventListener("click", function(event){
+    updateHistory();
     document.getElementById("controls").style.display = "none";
     document.getElementById("state").style.display = "flex";
 });
 
 //Functions
 function setup(light, degrees) {
-    //axios.get('http://localhost:8080/api/data').then(response => {
+    //axios.get('http://localhost:8080/api/update').then(response => {
 	//	console.log("Getted correctly.");
     //});
     btnLights.value = light;
@@ -43,17 +44,39 @@ function setup(light, degrees) {
     document.querySelector("div p").innerHTML = rngBlinds.value;
 }
 
-function sendUpdate(key, value){
-    //const formData = new FormData();
-    //formData.append(key, value);
+function sendUpdate(key, value) {
+    //Builds JSON message
     let values;
     if (key == "lights") {
-        values = {'lights' : value};
+        values = {'type' : "light", 'value' : value};
     } else if (key == "blinds") {
-        values = {'blinds' : value};
+        values = {'type' : "blind", 'value' : value};
     }
 	var jsonValues = JSON.stringify(values);
+
+    //Sends POST request with JSON message
     axios.post('http://localhost:8080/api/data', jsonValues).then(response => {
 		console.log("Sended correctly.");
+    });
+}
+
+function updateHistory() {
+    //Sends GET request and populates the HTML with response data
+    axios.get('http://localhost:8080/api/data').then(response => {
+        let allRecords = response.data;
+        let record = `<tr>
+                        <th>Giorno</th>
+                        <th>Ora</th>
+                        <th></th>
+                      </tr>`;
+        for(let i = 0; i < allRecords.length; i++) {
+            record += `<tr>
+                            <td>${allRecords[i]["Date"]}</td>
+                            <td>${allRecords[i]["Time"]}</td>
+                            <td>${allRecords[i]["Content"]}</td>
+                        </tr>`;
+        }
+        const main = document.querySelector("#state table");
+        main.innerHTML = record;
     });
 }

@@ -1,25 +1,25 @@
 package esiot.module_lab_3_2;
 
 class DataPoint {
-	private double value;
-	private long time;
-	private String place;
+	private String date;
+	private String time;
+	private String content;
 	
-	public DataPoint(double value, long time, String place) {
-		this.value = value;
+	public DataPoint(String date, String time, String content) {
+		this.date = date;
 		this.time = time;
-		this.place = place;
+		this.content = content;
 	}
 	
-	public double getValue() {
-		return value;
+	public String getDate() {
+		return this.date;
 	}
 	
-	public long getTime() {
-		return time;
+	public String getTime() {
+		return this.time;
 	}
 	
-	public String getPlace() {
-		return place;
+	public String getContent() {
+		return this.content;
 	}
 }
