@@ -3,7 +3,8 @@ let rngBlinds = document.getElementById("blinds");
 let btnControls = document.getElementById("btnControls");
 let btnHistory = document.getElementById("btnHistory");
 
-setup("ON", 90);
+//Setup
+updateCurrentState();
 
 //Controls' event listeners
 btnLights.addEventListener("click", function(event){
@@ -24,6 +25,7 @@ rngBlinds.addEventListener("change", function(event){
 
 //Navigation
 btnControls.addEventListener("click", function(event){
+    updateCurrentState();
     document.getElementById("controls").style.display = "flex";
     document.getElementById("state").style.display = "none";
 });
@@ -35,14 +37,6 @@ btnHistory.addEventListener("click", function(event){
 });
 
 //Functions
-function setup(light, degrees) {
-    //axios.get('http://localhost:8080/api/update').then(response => {
-	//	console.log("Getted correctly.");
-    //});
-    btnLights.value = light;
-    rngBlinds.value = degrees;
-    document.querySelector("div p").innerHTML = rngBlinds.value;
-}
 
 function sendUpdate(key, value) {
     //Builds JSON message
@@ -78,5 +72,15 @@ function updateHistory() {
         }
         const main = document.querySelector("#state table");
         main.innerHTML = record;
+    });
+}
+
+//TO-DO
+function updateCurrentState(){
+    axios.get('http://localhost:8080/api/currentData').then(response => {
+        let data = response.data;
+        btnLights.value = data["light"];
+        rngBlinds.value = data["degrees"];
+        document.querySelector("div p").innerHTML = rngBlinds.value;
     });
 }

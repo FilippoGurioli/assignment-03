@@ -62,7 +62,7 @@
         <footer>
             <p>By Silvia Furegato, Filippo Gurioli & Tommaso Turci.</p>
         </footer>
-        <script src="SmartHome-Scripts.js"></script>
         <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="SmartHome-Scripts.js"></script>
     </body>
 </html>

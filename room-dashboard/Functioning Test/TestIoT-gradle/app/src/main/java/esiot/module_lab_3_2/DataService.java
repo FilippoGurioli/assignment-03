@@ -21,6 +21,9 @@ public class DataService extends AbstractVerticle {
 	private static final int MAX_SIZE = 10;
 	private LinkedList<DataPoint> values;
 	
+	private String light = "OFF";
+	private int degrees = 0;
+	
 	public DataService(int port) {
 		values = new LinkedList<>();		
 		this.port = port;
@@ -31,7 +34,8 @@ public class DataService extends AbstractVerticle {
 		Router router = Router.router(vertx);
 		router.route().handler(BodyHandler.create());
 		router.post("/api/data").handler(this::handleAddNewData);
-		router.get("/api/data").handler(this::handleGetData);		
+		router.get("/api/data").handler(this::handleGetData);
+		router.get("/api/currentData").handler(this::handleGetCurrentData);
 		vertx
 			.createHttpServer()
 			.requestHandler(router)
@@ -51,9 +55,11 @@ public class DataService extends AbstractVerticle {
 			String content = "";
 			if (res.getString("type").equals("light")) {
 				content = "Luci: " + res.getString("value");
+				light = res.getString("value"); //Update lights value
 			}
 			if (res.getString("type").equals("blind")) {
 				content = "Tende: " + res.getString("value") + "%";
+				degrees = Integer.parseInt(res.getString("value")); //Update blinds value
 			}
 			formatter = new SimpleDateFormat("HH:mm:ss");
 			String time = formatter.format(new Date());
@@ -89,6 +95,20 @@ public class DataService extends AbstractVerticle {
 		response.putHeader("Access-Control-Allow-Origin", origin);
 		response.putHeader("content-type", "application/json")
 				.end(arr.encodePrettily());
+	}
+	
+	private void handleGetCurrentData(RoutingContext routingContext) {
+		//Build response
+		JsonObject allData = new JsonObject();
+		allData.put("light", light);
+		allData.put("degrees", degrees);
+		
+		//Send response
+		HttpServerResponse response = routingContext.response();
+		final String origin = routingContext.request().getHeader("Origin");
+		response.putHeader("Access-Control-Allow-Origin", origin);
+		response.putHeader("content-type", "application/json")
+				.end(allData.encodePrettily());
 	}
 	
 	private void sendError(int statusCode, HttpServerResponse response) {
