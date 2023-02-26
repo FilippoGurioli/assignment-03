@@ -53,7 +53,7 @@ class EventHandler : public AsyncFSM {
       msg.remove(msg.length()-1);
 
       /*Response for debugging*/
-      Serial.println("A-received: " + msg + '\n');
+      Serial.print("A-received: " + msg + '\n');
 
       /*Command handling*/
       bool flag = true;

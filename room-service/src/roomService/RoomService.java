@@ -13,8 +13,8 @@ public class RoomService {
 	
 	/*
 	Communication protocols:
-	Arduino to Java - must have "/" before and after the command
-	Java to Arduino - must have "\n" at the end of the command
+	Arduino to Java - must have "/" before and after the command (sends both debugging strings and commands)
+	Java to Arduino - must have "\n" at the end of the command (sends only commands)
 	*/
 	
 	private final static int BAUD_RATE = 9600;
@@ -35,14 +35,14 @@ public class RoomService {
 		}
 		if (comPort == null) {
 			System.err.println("PortNotFoundException. There is no serial port communicating with Arduino Uno available right now");
-			throw new Exception(); //da modificare con un'eccezione più specifica
+			throw new Exception();
 		}
 		comPort.setComPortParameters(BAUD_RATE, Byte.SIZE, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
 		if (comPort.openPort()) {			
 			System.out.println("Connected to " + comPort + " port");
 		} else {
-			System.err.println("CannotOpenPortException.");
-			throw new Exception(); //da modificare con un'eccezione più specifica
+			System.err.println("UnopenablePortException. Cannot open the " + comPort + " port. Maybe it's already in use.");
+			throw new Exception();
 		}
 		
 		comPort.addDataListener(new SerialPortDataListener() {
@@ -83,9 +83,6 @@ public class RoomService {
 				}
 			}
 		});
-		//Communication Protocol:
-		//the info must end with new line (\n)
-		//i.e.: send 2 msgs, "180" and "ON". "180" becomes "180\n", "ON" becomes "ON\n".
 		while (true) {
 			//Starting from Servo 180, PIR NOONE, Morning false, PR BLACK, LED off
 			Thread.sleep(10_000);

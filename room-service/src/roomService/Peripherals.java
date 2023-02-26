@@ -4,12 +4,14 @@ public class Peripherals {
 
 	private final int servo;
 	private final boolean led;
+	private static final int MAX_DEG = 180;
+	private static final int MIN_DEG = 0;
 	
 	public Peripherals(final int servo, final boolean led) {
-		if (servo > 180) {
-			this.servo = 180;
-		} else if (servo < 0) {
-			this.servo = 0;
+		if (servo > MAX_DEG) {
+			this.servo = MAX_DEG;
+		} else if (servo < MIN_DEG) {
+			this.servo = MIN_DEG;
 		} else {			
 			this.servo = servo;
 		}
