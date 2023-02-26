@@ -37,20 +37,6 @@ class EventHandler : public AsyncFSM {
       /*Listening the msg from the right port*/
       int evType = ev->getType();
       String msg;
-      /*if (evType == DATA_AVAILABLE_EVENT) {
-        Serial.readBytes(buffer, BUFFER_SIZE);
-        msg = String(buffer);
-        Serial.println(msg);
-      } else if (evType == BLUETOOTH_EVENT) {
-        int ch;
-        do {
-          ch = this->btPort->readData();
-            if (ch != -1) {
-              msg += (char) ch;
-            }
-          } while(ch != '\n');
-      }*/
-
       int ch;
         do {
           ch = evType == DATA_AVAILABLE_EVENT ? Serial.read() : evType == BLUETOOTH_EVENT ? this->btPort->readData() : -1;
@@ -63,12 +49,11 @@ class EventHandler : public AsyncFSM {
       int j = 0;
       String commands[MAX_COMMANDS];
       for (int i = 0; i < msg.length(); i++) {
-        if (msg.charAt(i) != ' ' && msg.charAt(i) != '\n') {
-          formatted += msg.charAt(i);
-        }
         if (msg.charAt(i) == '\n') {
           commands[j++] = formatted;
           formatted = "";
+        } else {
+          formatted += msg.charAt(i);
         }
       }
 
@@ -96,14 +81,11 @@ class EventHandler : public AsyncFSM {
         if (flag && (isDigit(first) || first == '-')) {
           int val = commands[i].toInt();
           val = (val >= 0 ? (val <= 180 ? map(val,0,180,750,2250) : 2250) : 750);
-          Serial.println("Servo rotation");
           servo.write(val);
         } else if (commands[i] == "ON") {
-          Serial.println("Turning on led");
           this->btPort->println("LED is turned on\n");
           led->switchOn();
         } else if (commands[i] == "OFF") {
-          Serial.println("Turning off led");
           this->btPort->println("LED is turned off\n");
           led->switchOff();
         }
