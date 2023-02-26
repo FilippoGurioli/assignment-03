@@ -1,5 +1,21 @@
 <?php
     session_start();
+    $_SERVER["REQUEST_METHOD"] = 'POST';
+    header("Access-Control-Allow-Origin: http://localhost:80/assignment-03/room-dashboard/Functioning%20Test/Smarthome-Dashboard.php");
+
+    $currentValues["light"] = "OFF";
+    $currentValues["blinds"] = "0";
+
+    if (isset($_POST["lightVal"])) {
+        $currentValues["light"] = $_POST["lightVal"];
+        echo "ciao";
+        //header("HTTP/1.1 200 OK");
+    }
+    if (isset($_POST["blindsVal"])) {
+        $currentValues["blinds"] = $_POST["blindsVal"];
+        //header("HTTP/1.1 200 OK");
+        var_dump($_POST);
+    }
 ?>
 
 <!DOCTYPE html>
@@ -20,11 +36,11 @@
         <section id="controls">
             <form>
                 <div>
-                    <input type="button" name="btnLights" id="lights" value="OFF">
+                    <input type="button" name="btnLights" id="lights" value="<?php echo $currentValues["light"]; ?>">
                     <label for="lights">Luci</label>
                 </div>
                 <div>
-                    <p>0</p>
+                    <p><?php echo $currentValues["blinds"]; ?></p>
                     <input type="range" name="rngBlinds" id="blinds" min="0" max="180" value="0">
                     <label for="blinds">Tende</label>
                 </div>
