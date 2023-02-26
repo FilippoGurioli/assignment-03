@@ -53,25 +53,27 @@ public class RoomService {
 			}
 		   
 		});
-		//Communication Protocol: 
-		//the info must be always the same size -> take the largest info as a reference, the other must fill the extra space with white spaces (" ")
+		//Communication Protocol:
 		//the info must end with new line (\n)
-		//i.e.: send 2 msgs, "180" and "ON". The largest is "180" that becomes "180\n", "ON" becomes "ON\n " to fill extra space
+		//i.e.: send 2 msgs, "180" and "ON". "180" becomes "180\n", "ON" becomes "ON\n".
 		while (true) {
 			//Starting from Servo 180, PIR false, Morning false
 			Thread.sleep(10_000);
 			String pir = esp.getCommandPIR();
 			System.out.println("Morning: " + time.isMorning());
 			System.out.println("PIR: " + pir);
+			System.out.println("Servo: " + this.p.getServo() + "\n");
 			if (time.isMorning() && pir.equals("PEOPLE") && this.p.getServo() == 180) {
-				System.out.println("Sending: 0");
-				this.p = new Peripherals(0, this.p.getLed());
-				comPort.writeBytes("0\n  ".getBytes(), "0\n  ".getBytes().length);
+				System.out.println("Sending: 0 and OFF");
+				this.p = new Peripherals(0, false);
+				comPort.writeBytes("0\n".getBytes(), "0\n".getBytes().length);
+				//comPort.writeBytes("OFF\n".getBytes(), "OFF\n".getBytes().length);
 			}
-			if (!time.isMorning() && pir.equals("NOONE") && this.p.getServo() > 0) {
-				System.out.println("Sending: 180");
-				this.p = new Peripherals(180, this.p.getLed());
+			if (!time.isMorning() && pir.equals("NOONE") && this.p.getServo() < 180) {
+				System.out.println("Sending: 180 and ON");
+				this.p = new Peripherals(180, true);
 				comPort.writeBytes("180\n".getBytes(), "180\n".getBytes().length);
+				//comPort.writeBytes("ON\n ".getBytes(), "ON\n ".getBytes().length);
 			}
 		}
 	}
