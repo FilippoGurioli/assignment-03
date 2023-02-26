@@ -11,10 +11,18 @@ import com.fazecast.jSerialComm.SerialPortEvent;
  */
 public class RoomService {
 	
+	/*
+	Communication protocols:
+	Arduino to Java - must have "/" before and after the command
+	Java to Arduino - must have "\n" at the end of the command
+	*/
+	
 	private final static int BAUD_RATE = 9600;
 	private final TimeThread time = new TimeThread();
 	private Peripherals p;
 	private final ESPEmulator esp = new ESPEmulator();
+	private String data = "";
+	private boolean stream = false;
 
 	public RoomService() throws Exception {
 		time.start();
@@ -40,41 +48,74 @@ public class RoomService {
 		comPort.addDataListener(new SerialPortDataListener() {
 		   @Override
 		   public int getListeningEvents() {
-			   return SerialPort.LISTENING_EVENT_DATA_RECEIVED | SerialPort.LISTENING_EVENT_DATA_WRITTEN;
+			   return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
 		   }
 
 		   @Override
 			public void serialEvent(final SerialPortEvent event) {
-				if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_RECEIVED) {
-					System.out.print(new String(event.getReceivedData(), StandardCharsets.UTF_8));
-				} else if (event.getEventType() == SerialPort.LISTENING_EVENT_DATA_WRITTEN) {
-					//System.out.println("All bytes were successfully transmitted!");
+				String msg = new String(event.getReceivedData(), StandardCharsets.UTF_8);
+				msg.chars().forEach(ch -> {
+					if (ch == '/') {
+						stream = !stream;
+					} else if (stream) {
+						data += (char) ch;
+					}
+				});
+				if (!stream) {					
+					if (data.equals("ON")) {
+						p = new Peripherals(p.getServo(), true);
+						System.out.println("LED turned on");
+						data = "";
+					} else if (data.equals("OFF")) {
+						p = new Peripherals(p.getServo(), false);
+						System.out.println("LED turned off");
+						data = "";
+					} else {					
+						try {
+							p = new Peripherals(Integer.parseInt(data), p.getLed());
+							System.out.println("Servo set at: " + p.getServo());
+							data = "";
+						} catch (final NumberFormatException e) {
+							//if data isn't "ON" or "OFF" nor a value it should be a debugging message
+							System.out.print(msg.replace("/", ""));
+						}
+					}
 				}
 			}
-		   
 		});
 		//Communication Protocol:
 		//the info must end with new line (\n)
 		//i.e.: send 2 msgs, "180" and "ON". "180" becomes "180\n", "ON" becomes "ON\n".
 		while (true) {
-			//Starting from Servo 180, PIR false, Morning false
+			//Starting from Servo 180, PIR NOONE, Morning false, PR BLACK, LED off
 			Thread.sleep(10_000);
 			String pir = esp.getCommandPIR();
-			System.out.println("Morning: " + time.isMorning());
-			System.out.println("PIR: " + pir);
-			System.out.println("Servo: " + this.p.getServo() + "\n");
+			String pr = esp.getCommandPR();
+			this.printStatus(pir, pr);
+			//-----------------------SERVO AUTO-HANDLING------------------
 			if (time.isMorning() && pir.equals("PEOPLE") && this.p.getServo() == 180) {
-				System.out.println("Sending: 0 and OFF");
-				this.p = new Peripherals(0, false);
+				System.out.println("J-send: 0");
 				comPort.writeBytes("0\n".getBytes(), "0\n".getBytes().length);
-				//comPort.writeBytes("OFF\n".getBytes(), "OFF\n".getBytes().length);
-			}
-			if (!time.isMorning() && pir.equals("NOONE") && this.p.getServo() < 180) {
-				System.out.println("Sending: 180 and ON");
-				this.p = new Peripherals(180, true);
+			} else if (!time.isMorning() && pir.equals("NOONE") && this.p.getServo() < 180) {
+				System.out.println("J-send: 180");
 				comPort.writeBytes("180\n".getBytes(), "180\n".getBytes().length);
-				//comPort.writeBytes("ON\n ".getBytes(), "ON\n ".getBytes().length);
+			}
+			//-----------------------LED AUTO-HANDLING--------------------
+			if (pr.equals("BLACK") && pir.equals("PEOPLE") && !this.p.getLed()) {
+				System.out.println("J-send: ON");
+				comPort.writeBytes("ON\n".getBytes(), "ON\n".getBytes().length);
+			} else if (this.p.getLed()) {
+				System.out.println("J-send: OFF");
+				comPort.writeBytes("OFF\n".getBytes(), "OFF\n".getBytes().length);
 			}
 		}
+	}
+	
+	private void printStatus(final String pir, final String pr) {
+		System.out.println("\nMorning: " + time.isMorning());
+		System.out.println("PIR: " + pir);
+		System.out.println("Light sensor: " + pr);
+		System.out.println("-----------------");
+		System.out.println(this.p + "\n");
 	}
 }

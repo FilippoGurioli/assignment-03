@@ -1,3 +1,9 @@
+/*
+Communication protocols:
+Arduino to Java - must have "/" before and after the command
+Java to Arduino - must have "\n" at the end of the command
+*/
+
 #ifndef __EVENTHANDLER__
 #define __EVENTHANDLER__
 
@@ -10,7 +16,6 @@
 #include <ctype.h>
 
 #define BUFFER_SIZE 40
-#define MAX_COMMANDS 5
 
 class EventHandler : public AsyncFSM {
 
@@ -45,52 +50,34 @@ class EventHandler : public AsyncFSM {
           }
           } while(ch != '\n');
       /*Formatting the msg to something useful to Arduino*/
-      String formatted;
-      int j = 0;
-      String commands[MAX_COMMANDS];
-      for (int i = 0; i < msg.length(); i++) {
-        if (msg.charAt(i) == '\n') {
-          commands[j++] = formatted;
-          formatted = "";
-        } else {
-          formatted += msg.charAt(i);
-        }
-      }
+      msg.remove(msg.length()-1);
 
       /*Response for debugging*/
-      Serial.print("Received: ");
-      for (int i = 0; i < MAX_COMMANDS && commands[i] != NULL; i++) {
-        Serial.print(commands[i] + " ");
-      }
-      Serial.print("from ");
-      if (evType == DATA_AVAILABLE_EVENT){
-        Serial.println("Serial Port");
-      } else {
-        Serial.println("BT Port");
-      }
+      Serial.println("A-received: " + msg + '\n');
 
       /*Command handling*/
       bool flag = true;
-      for (int i = 0; i < MAX_COMMANDS && commands[i] != NULL; i++) {
-        for (j = 1; j < commands[i].length(); j++) {
-          if (!isDigit(commands[i].charAt(j))) {
-            flag = false;
-          }
+      for (int i = 1; i < msg.length(); i++) {
+        if (!isDigit(msg.charAt(i))) {
+          flag = false;
         }
-        char first = commands[i].charAt(0);
-        if (flag && (isDigit(first) || first == '-')) {
-          int val = commands[i].toInt();
-          val = (val >= 0 ? (val <= 180 ? map(val,0,180,750,2250) : 2250) : 750);
-          servo.write(val);
-        } else if (commands[i] == "ON") {
-          this->btPort->println("LED is turned on\n");
-          led->switchOn();
-        } else if (commands[i] == "OFF") {
-          this->btPort->println("LED is turned off\n");
-          led->switchOff();
-        }
-        commands[i] = "";
       }
+      char first = msg.charAt(0);
+      if (flag && (isDigit(first) || first == '-')) {
+        int val = msg.toInt();
+        Serial.print("/" + msg + "/");
+        val = (val >= 0 ? (val <= 180 ? map(val,0,180,750,2250) : 2250) : 750);
+        servo.write(val);
+      } else if (msg == "ON") {
+        this->btPort->println("LED is turned on\n");
+        Serial.print("/ON/");
+        led->switchOn();
+      } else if (msg == "OFF") {
+        this->btPort->println("LED is turned off\n");
+        Serial.print("/OFF/");
+        led->switchOff();
+      }
+      msg = "";
     }
 };
 

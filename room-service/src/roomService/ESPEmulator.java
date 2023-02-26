@@ -3,7 +3,8 @@ package roomService;
 public class ESPEmulator {
 
 	private boolean PIR = false;
-	private boolean PR = false;
+	private int PR = 0;
+	private String photoR = "BLACK";
 	
 	public String getCommandPIR() {
 		PIR = !PIR;
@@ -15,11 +16,15 @@ public class ESPEmulator {
 	}
 	
 	public String getCommandPR() {
-		PR = !PR;
-		if (PR) {
-			return "WHITE";
-		} else {
-			return "BLACK";
+		PR++;
+		if (PR % 4 == 0) {
+			PR = 0;
+			if (photoR.equals("WHITE")) {
+				photoR = "BLACK";
+			} else {
+				photoR = "WHITE";
+			}
 		}
+		return photoR;
 	}
 }

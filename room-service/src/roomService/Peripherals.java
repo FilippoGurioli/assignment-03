@@ -24,4 +24,7 @@ public class Peripherals {
 		return this.led;
 	}
 	
+	public String toString() {
+		return "Servo: " + this.servo + "\nLED: " + (this.led ? "ON" : "OFF") + "\n";
+	}
 }
