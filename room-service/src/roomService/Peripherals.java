@@ -3,11 +3,11 @@ package roomService;
 public class Peripherals {
 
 	private final int servo;
-	private final boolean led;
-	private static final int MAX_DEG = 180;
-	private static final int MIN_DEG = 0;
+	private final Led led;
+	public static final int MAX_DEG = 180;
+	public static final int MIN_DEG = 0;
 	
-	public Peripherals(final int servo, final boolean led) {
+	public Peripherals(final int servo, final Led led) {
 		if (servo > MAX_DEG) {
 			this.servo = MAX_DEG;
 		} else if (servo < MIN_DEG) {
@@ -22,11 +22,11 @@ public class Peripherals {
 		return this.servo;
 	}
 	
-	public boolean getLed() {
+	public Led getLed() {
 		return this.led;
 	}
 	
 	public String toString() {
-		return "Servo: " + this.servo + "\nLED: " + (this.led ? "ON" : "OFF") + "\n";
+		return "Servo: " + this.servo + "\nLED: " + this.led + "\n";
 	}
 }

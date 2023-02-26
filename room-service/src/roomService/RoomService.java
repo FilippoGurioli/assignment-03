@@ -26,7 +26,7 @@ public class RoomService {
 
 	public RoomService() throws Exception {
 		time.start();
-		this.p = new Peripherals(180, false); //Arduino starts always at Servo 180 and led off
+		this.p = new Peripherals(Peripherals.MAX_DEG, Led.OFF); //Arduino starts always at Servo 180 and led off
 		SerialPort comPort = null;
 		for (var port : SerialPort.getCommPorts()) {
 			if (port.toString().contains("Arduino Uno")) {
@@ -63,11 +63,11 @@ public class RoomService {
 				});
 				if (!stream) {					
 					if (data.equals("ON")) {
-						p = new Peripherals(p.getServo(), true);
+						p = new Peripherals(p.getServo(), Led.ON);
 						System.out.println("LED turned on");
 						data = "";
 					} else if (data.equals("OFF")) {
-						p = new Peripherals(p.getServo(), false);
+						p = new Peripherals(p.getServo(), Led.OFF);
 						System.out.println("LED turned off");
 						data = "";
 					} else {					
@@ -98,10 +98,10 @@ public class RoomService {
 				comPort.writeBytes("180\n".getBytes(), "180\n".getBytes().length);
 			}
 			//-----------------------LED AUTO-HANDLING--------------------
-			if (pr.equals("BLACK") && pir.equals("PEOPLE") && !this.p.getLed()) {
+			if (pr.equals("BLACK") && pir.equals("PEOPLE") && this.p.getLed() == Led.OFF) {
 				System.out.println("J-send: ON");
 				comPort.writeBytes("ON\n".getBytes(), "ON\n".getBytes().length);
-			} else if (this.p.getLed()) {
+			} else if (this.p.getLed() == Led.ON) {
 				System.out.println("J-send: OFF");
 				comPort.writeBytes("OFF\n".getBytes(), "OFF\n".getBytes().length);
 			}
