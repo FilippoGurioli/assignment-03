@@ -101,17 +101,17 @@ public class MainActivity extends AppCompatActivity {
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!QUI PER MODIFICARE ARDUINO->ANDROID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     case MESSAGE_READ:
                         String arduinoMsg = msg.obj.toString(); // Read message from Arduino
-                        switch (arduinoMsg.toLowerCase()){
-                            case "led is turned on":
-                                imageView.setBackgroundColor(getResources().getColor(R.color.colorOn));
-                                textViewInfo.setText("Arduino Message : " + arduinoMsg);
-                                buttonToggle.setText("turn off");
-                                break;
-                            case "led is turned off":
-                                imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
-                                textViewInfo.setText("Arduino Message : " + arduinoMsg);
-                                buttonToggle.setText("turn on");
-                                break;
+                        arduinoMsg = arduinoMsg.replaceAll("[^a-zA-Z0-9_-]", "");
+                        if (arduinoMsg.equals("ON")) {
+                            imageView.setBackgroundColor(getResources().getColor(R.color.colorOn));
+                            textViewInfo.setText("Arduino Message - LED: " + arduinoMsg);
+                            buttonToggle.setText("turn off");
+                        } else if (arduinoMsg.equals("OFF")) {
+                            imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
+                            textViewInfo.setText("Arduino Message - LED : " + arduinoMsg);
+                            buttonToggle.setText("turn on");
+                        } else {
+                            textViewInfo.setText("Arduino Message - Servo: " + arduinoMsg);
                         }
                         break;
                 }
@@ -136,12 +136,12 @@ public class MainActivity extends AppCompatActivity {
                 String btnState = buttonToggle.getText().toString().toLowerCase();
                 switch (btnState){
                     case "turn on":
-                        buttonToggle.setText("Turn Off");
+                        //buttonToggle.setText("Turn Off");
                         // Command to turn on LED on Arduino. Must match with the command in Arduino code
                         cmdText = "ON\n";
                         break;
                     case "turn off":
-                        buttonToggle.setText("Turn On");
+                        //buttonToggle.setText("Turn On");
                         // Command to turn off LED on Arduino. Must match with the command in Arduino code
                         cmdText = "OFF\n";
                         break;

@@ -7,7 +7,7 @@ public class TimeThread extends Thread {
 
 	private boolean morning = false;
 	private final SimpleDateFormat sdf = new SimpleDateFormat("HH");
-	private static final int TEN_MIN = 1000 * 60 * 10; //1000 millisec times 60 sec times 10 mins
+	private static final int TEN_MIN = 1000 * 60 * 1; //1000 millisec times 60 sec times 1 mins, it should be higher to simulate the context better
 	
 	@Override
 	public void run() {
