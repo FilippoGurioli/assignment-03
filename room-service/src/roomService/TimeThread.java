@@ -1,22 +1,36 @@
 package roomService;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class TimeThread extends Thread {
 
 	private boolean morning = false;
+	private final SimpleDateFormat sdf = new SimpleDateFormat("HH");
+	private static final int TEN_MIN = 1000 * 60 * 10; //1000 millisec times 60 sec times 10 mins
 	
 	@Override
 	public void run() {
-		while(true) {			
+		while(true) {
+			int tmp = Integer.parseInt(sdf.format(new Date()));
+			if (tmp >= 8 && tmp <= 19 && !this.morning) {
+				morning = true;
+			} else if (this.morning) {
+				morning = false;
+			}
 			try {
-				Thread.sleep(30_000);
-			} catch (InterruptedException e) {
+				Thread.sleep(TEN_MIN);
+			} catch (final InterruptedException e) {
 				e.printStackTrace();
 			}
-			morning = !morning;
 		}
 	}
 	
 	public boolean isMorning() {
 		return morning;
+	}
+	
+	public String toString() {
+		return (morning ? "Day" : "Night");
 	}
 }

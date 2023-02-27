@@ -33,9 +33,9 @@ class EventHandler : public AsyncFSM {
       this->btPort = btPort;
       this->btPort->registerObserver(this);
       this->led = led;
-      this->led->switchOff(); //Default Start: LED off
       this->servo = servo;
       this->servo.write(2250); //Default Start: servo fully closed (roller blinds closed)
+      this->led->switchOff();   //Default Start: led OFF
     }
   
     void handleEvent(Event* ev) {
@@ -53,7 +53,7 @@ class EventHandler : public AsyncFSM {
       msg.remove(msg.length()-1);
 
       /*Response for debugging*/
-      Serial.print("A-received: " + msg + '\n');
+      Serial.println("A-received: " + msg);
 
       /*Command handling*/
       bool flag = true;
