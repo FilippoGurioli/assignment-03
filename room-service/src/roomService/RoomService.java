@@ -22,18 +22,14 @@ public class RoomService {
 			this.printStatus(pir, pr);
 			//-----------------------SERVO AUTO-HANDLING------------------
 			if (time.isMorning() && pir.equals("PEOPLE") && this.p.getServo() == 180) {
-				System.out.println("J-send: 0");
 				this.serialComm.send("0");
 			} else if (!time.isMorning() && pir.equals("NOONE") && this.p.getServo() < 180) {
-				System.out.println("J-send: 180");
 				this.serialComm.send("180");
 			}
 			//-----------------------LED AUTO-HANDLING--------------------
 			if (pr.equals("BLACK") && pir.equals("PEOPLE") && this.p.getLed() == Led.OFF) {
-				System.out.println("J-send: ON");
 				this.serialComm.send("ON");
 			} else if (this.p.getLed() == Led.ON) {
-				System.out.println("J-send: OFF");
 				this.serialComm.send("OFF");
 			}
 		}
@@ -55,6 +51,6 @@ public class RoomService {
 		System.out.println("PIR: " + pir);
 		System.out.println("Light sensor: " + pr);
 		System.out.println("-----------------");
-		System.out.println(this.p + "\n");
+		System.out.println(this.p);
 	}
 }

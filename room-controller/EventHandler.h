@@ -1,9 +1,3 @@
-/*
-Communication protocols:
-Arduino to Java - must have "/" before and after the command
-Java to Arduino - must have "\n" at the end of the command
-*/
-
 #ifndef __EVENTHANDLER__
 #define __EVENTHANDLER__
 
@@ -39,18 +33,9 @@ class EventHandler : public AsyncFSM {
     }
   
     void handleEvent(Event* ev) {
-      /*Listening the msg from the right port*/
+      /*Listening the msg*/
       int evType = ev->getType();
-      String msg;
-      int ch;
-        do {
-          ch = evType == DATA_AVAILABLE_EVENT ? Serial.read() : evType == BLUETOOTH_EVENT ? this->btPort->readData() : -1;
-          if (ch != -1) {
-            msg += (char) ch;
-          }
-          } while(ch != '\n');
-      /*Formatting the msg to something useful to Arduino*/
-      msg.remove(msg.length()-1);
+      String msg = read(evType);
 
       /*Response for debugging*/
       Serial.println("A-received: " + msg);
@@ -65,19 +50,41 @@ class EventHandler : public AsyncFSM {
       char first = msg.charAt(0);
       if (flag && (isDigit(first) || first == '-')) {
         int val = msg.toInt();
-        Serial.print("/" + msg + "/");
+        this->sendCommand(msg);
         val = (val >= 0 ? (val <= 180 ? map(val,0,180,750,2250) : 2250) : 750);
         servo.write(val);
       } else if (msg == "ON") {
-        this->btPort->println("LED is turned on\n");
-        Serial.print("/ON/");
+        this->sendCommand("ON");
         led->switchOn();
       } else if (msg == "OFF") {
-        this->btPort->println("LED is turned off\n");
-        Serial.print("/OFF/");
+        this->sendCommand("OFF");
         led->switchOff();
       }
       msg = "";
+    }
+
+    String read(int evType) {
+      String msg;
+      int ch;
+        do {
+          ch = evType == DATA_AVAILABLE_EVENT ? Serial.read() : evType == BLUETOOTH_EVENT ? this->btPort->readData() : -1;
+          if (ch != -1) {
+            msg += (char) ch;
+          }
+          } while(ch != '\n');
+      /*Formatting the msg*/
+      msg.remove(msg.length()-1);
+      return msg;
+    }
+
+    /*
+    Communication protocols:
+    Arduino to Java - must have "/" before and after the command
+    Java to Arduino - must have "\n" at the end of the command
+    */
+    void sendCommand(String command) {
+      Serial.print("/" + command + "/");
+      this->btPort->println(command);
     }
 };
 

@@ -76,6 +76,7 @@ public class SerialPortCommunicator {
 	
 	public void send(final String msg) {
 		final String prtMsg = msg + "\n";
+		System.out.print("J-send: " + prtMsg);
 		this.comPort.writeBytes(prtMsg.getBytes(), prtMsg.getBytes().length);
 	}
 }
