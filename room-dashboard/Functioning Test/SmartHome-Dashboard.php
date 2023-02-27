@@ -41,7 +41,7 @@
                 </div>
                 <div>
                     <p><?php echo $currentValues["blinds"]; ?></p>
-                    <input type="range" name="rngBlinds" id="blinds" min="0" max="180" value="0">
+                    <input type="range" name="rngBlinds" id="blinds" min="0" step="30" max="180" value="0">
                     <label for="blinds">Tende</label>
                 </div>
             </form>
