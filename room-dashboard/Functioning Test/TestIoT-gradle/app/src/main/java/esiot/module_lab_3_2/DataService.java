@@ -23,6 +23,8 @@ public class DataService extends AbstractVerticle {
 	
 	private String light = "OFF";
 	private int degrees = 0;
+	private boolean presence = false;
+	private boolean darkness = true;
 	
 	public DataService(int port) {
 		values = new LinkedList<>();		
@@ -34,6 +36,7 @@ public class DataService extends AbstractVerticle {
 		Router router = Router.router(vertx);
 		router.route().handler(BodyHandler.create());
 		router.post("/api/data").handler(this::handleAddNewData);
+		router.post("/api/ESPdata").handler(this::handleESPData);
 		router.get("/api/data").handler(this::handleGetData);
 		router.get("/api/currentData").handler(this::handleGetCurrentData);
 		vertx
@@ -109,6 +112,28 @@ public class DataService extends AbstractVerticle {
 		response.putHeader("Access-Control-Allow-Origin", origin);
 		response.putHeader("content-type", "application/json")
 				.end(allData.encodePrettily());
+	}
+	
+	private void handleESPData(RoutingContext routingContext) {
+		System.out.println("Guarda che comunque l'ho ricevuta");
+		HttpServerResponse response = routingContext.response();
+		JsonObject res = routingContext.getBodyAsJson();
+		if (res == null) {
+			sendError(400, response);
+		} else {
+			//Update presence and darkness values;
+			presence = res.getBoolean("presence");
+			darkness = res.getBoolean("darkness");
+			//System.out.println(res);
+			
+			log("Presence: " + presence + " - Darkness: " + darkness);
+
+			//Send response
+			final String origin = routingContext.request().getHeader("Origin");
+			response.putHeader("Access-Control-Allow-Origin", origin)
+					.setStatusCode(200)
+					.end();
+		}
 	}
 	
 	private void sendError(int statusCode, HttpServerResponse response) {
