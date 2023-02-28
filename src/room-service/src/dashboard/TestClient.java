@@ -1,4 +1,4 @@
-package esiot.module_lab_3_2;
+package dashboard;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;

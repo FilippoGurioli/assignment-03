@@ -1,4 +1,4 @@
-package esiot.module_lab_3_2;
+package dashboard;
 
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpServerResponse;
@@ -23,8 +23,8 @@ public class DataService extends AbstractVerticle {
 	
 	private String light = "OFF";
 	private int degrees = 0;
-	private boolean presence = false;
-	private boolean darkness = true;
+	private String presence = "0";
+	private String darkness = "0";
 	
 	public DataService(int port) {
 		values = new LinkedList<>();		
@@ -115,15 +115,14 @@ public class DataService extends AbstractVerticle {
 	}
 	
 	private void handleESPData(RoutingContext routingContext) {
-		System.out.println("Guarda che comunque l'ho ricevuta");
 		HttpServerResponse response = routingContext.response();
 		JsonObject res = routingContext.getBodyAsJson();
 		if (res == null) {
 			sendError(400, response);
 		} else {
 			//Update presence and darkness values;
-			presence = res.getBoolean("presence");
-			darkness = res.getBoolean("darkness");
+			presence = res.getString("presence");
+			darkness = res.getString("darkness");
 			//System.out.println(res);
 			
 			log("Presence: " + presence + " - Darkness: " + darkness);

@@ -1,4 +1,4 @@
-package esiot.module_lab_3_2;
+package dashboard;
 
 class DataPoint {
 	private String date;
