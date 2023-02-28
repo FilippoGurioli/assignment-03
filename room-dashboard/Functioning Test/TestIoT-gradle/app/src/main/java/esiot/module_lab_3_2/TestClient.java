@@ -24,6 +24,7 @@ public class TestClient extends AbstractVerticle {
 		System.out.println("Posting new data item... ");
 		client
 		.post(port, host, "/assignment-03/room-dashboard/Functioning%20Test/Smarthome-Dashboard.php")
+		.putHeader("content-type", "application/x-www-form-urlencoded")
 		.addQueryParam("blindsVal", "139")
 		.send()
 		//.sendJson(item)

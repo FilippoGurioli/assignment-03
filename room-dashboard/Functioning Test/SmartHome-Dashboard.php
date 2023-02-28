@@ -6,6 +6,9 @@
     $currentValues["light"] = "OFF";
     $currentValues["blinds"] = "0";
 
+    $entityBody = file_get_contents('php://input');
+    var_dump($entityBody);
+
     if (isset($_POST["lightVal"])) {
         $currentValues["light"] = $_POST["lightVal"];
         echo "ciao";
