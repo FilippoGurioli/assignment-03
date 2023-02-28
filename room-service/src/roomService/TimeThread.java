@@ -13,9 +13,9 @@ public class TimeThread extends Thread {
 	public void run() {
 		while(true) {
 			int tmp = Integer.parseInt(sdf.format(new Date()));
-			if (tmp >= 8 && tmp <= 19 && !this.morning) {
+			if ((tmp >= 8 && tmp <= 19) && !this.morning) {
 				morning = true;
-			} else if (this.morning) {
+			} else if ((tmp < 8 || tmp > 19) && this.morning) {
 				morning = false;
 			}
 			try {
