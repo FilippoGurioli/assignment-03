@@ -1,17 +1,19 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include "devices/PirImpl.h"
-#include "devices/LightSensorImpl.h"
+#include "./util/devices/PirImpl.h"
+#include "./util/devices/LightSensorImpl.h"
 
 #define LSPIN 4  //Photoresistor pin
 #define PIRPIN 5 //Pir pin
 
 PirImpl* pir;
 LightSensorImpl* lightSensor;
+bool prevPirVal = false;
+bool prevLsVal = false;
 
-const char* ssid = "Galaxy A519DFD";
-const char* password = "aivaivaiv";
-const char* serviceURI = "http://192.168.6.20:8080/api/ESPdata";
+const char* ssid = /*"Galaxy A519DFD";*/"WINTERFIRE-5G";
+const char* password = /*"aivaivaiv";*/"matt1a51lv1avanna5andr00";
+const char* serviceURI = "http://192.168.178.22:8080/api/ESPdata";//"http://192.168.6.20:8080/api/ESPdata";
 
 void connectToWifi(const char* ssid, const char* password){
   WiFi.begin(ssid, password);
@@ -25,12 +27,16 @@ void connectToWifi(const char* ssid, const char* password){
   Serial.println(WiFi.localIP());
 }
 
-int sendData(String adderss, bool presence, bool brightness){ 
+int sendData(String adderss, bool presence, bool brightness){
   HTTPClient http;
   http.begin(adderss);
 
+  //Converts from boolean to string
+    String pres = presence ? "true" : "false";
+    String bright = brightness ? "true" : "false";
+
   http.addHeader("Content-Type", "application/json");
-  String msg = "{ \"presence\": " + String(presence) + ", \"brightness\": \"" + String(brightness) +"\" }";
+  String msg = "{ \"presence\": " + pres + ", \"brightness\": " + bright +" }";
 
   int responseCode = http.POST(msg);   
   http.end();  
@@ -57,14 +63,19 @@ void loop() {
     Serial.println(lsVal);
 
     //Sending retrieved data
-    int code = sendData(serviceURI, pirVal, lsVal);   
-    if (code == 200){
-      Serial.println("ok");
-    } else {
-      Serial.println(String("error: ") + code);
+    if ((pirVal != prevPirVal) || (lsVal != prevLsVal)) {
+      int code = sendData(serviceURI, pirVal, lsVal);   
+      if (code == 200){
+        Serial.println("ok");
+      } else {
+        Serial.println(String("error: ") + code);
+      }
+
+      prevPirVal = pirVal;
+      prevLsVal = lsVal;
     }
 
-    delay(5000);
+    delay(2000);
   } else {
     Serial.println("WiFi Disconnected... Reconnect.");
     connectToWifi(ssid, password);

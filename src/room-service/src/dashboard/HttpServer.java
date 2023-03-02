@@ -23,8 +23,8 @@ public class HttpServer extends AbstractVerticle {
 	
 	private String light = "OFF";
 	private int degrees = 0;
-	private String presence = "0";
-	private String darkness = "0";
+	private boolean presence = false;
+	private boolean brightness = false;
 	
 	public HttpServer(int port) {
 		values = new LinkedList<>();		
@@ -121,11 +121,10 @@ public class HttpServer extends AbstractVerticle {
 			sendError(400, response);
 		} else {
 			//Update presence and darkness values;
-			presence = res.getString("presence");
-			darkness = res.getString("darkness");
-			//System.out.println(res);
+			presence = res.getBoolean("presence");
+			brightness = res.getBoolean("brightness");
 			
-			log("Presence: " + presence + " - Darkness: " + darkness);
+			log("Presence: " + presence + " - Brightness: " + brightness);
 
 			//Send response
 			final String origin = routingContext.request().getHeader("Origin");
@@ -140,7 +139,7 @@ public class HttpServer extends AbstractVerticle {
 	}
 
 	private void log(String msg) {
-		System.out.println("[DATA SERVICE] "+msg);
+		System.out.println("[HTTP SERVER] "+msg);
 	}
 
 }
