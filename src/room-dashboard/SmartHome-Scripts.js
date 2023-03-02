@@ -11,9 +11,11 @@ btnLights.addEventListener("click", function(event){
     event.preventDefault();
     if(btnLights.value == "OFF"){
         btnLights.value = "ON";
+        btnLights.style.backgroundImage = "linear-gradient(to bottom right, #22c1c3, #fdbb2d)";
         sendUpdate("lights", "ON");
     } else{
         btnLights.value = "OFF";
+        btnLights.style.backgroundImage = null;
         sendUpdate("lights", "OFF");
     }
 });

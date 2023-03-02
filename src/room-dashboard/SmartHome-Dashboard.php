@@ -7,7 +7,7 @@
     $currentValues["blinds"] = "0";
 
     $entityBody = file_get_contents('php://input');
-    var_dump($entityBody);
+    //var_dump($entityBody);
 
     if (isset($_POST["lightVal"])) {
         $currentValues["light"] = $_POST["lightVal"];
@@ -25,6 +25,7 @@
 <html lang="it">
     <head>
         <title>SmartHome - Dashboard</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="utf-8">
         <link rel="stylesheet" href="SmartHome-Style.css">
     </head>
