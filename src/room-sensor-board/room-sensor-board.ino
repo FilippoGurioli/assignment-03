@@ -1,13 +1,13 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include "devices/PirImpl.h"
+#include "devices/LightSensorImpl.h"
 
 #define LSPIN 4  //Photoresistor pin
 #define PIRPIN 5 //Pir pin
 
-int pir, lightSensor;
-double lsVolt;
-bool presence;
-bool brightness;
+PirImpl* pir;
+LightSensorImpl* lightSensor;
 
 const char* ssid = "Galaxy A519DFD";
 const char* password = "aivaivaiv";
@@ -25,7 +25,7 @@ void connectToWifi(const char* ssid, const char* password){
   Serial.println(WiFi.localIP());
 }
 
-int sendData(String adderss, bool presence, bool brightness){  
+int sendData(String adderss, bool presence, bool brightness){ 
   HTTPClient http;
   http.begin(adderss);
 
@@ -39,35 +39,25 @@ int sendData(String adderss, bool presence, bool brightness){
 
 void setup() {
   Serial.begin(115200);
-    pinMode(LSPIN,INPUT);
-  pinMode(PIRPIN,INPUT);
+  pir = new PirImpl(PIRPIN);
+  lightSensor = new LightSensorImpl(LSPIN);
   connectToWifi(ssid, password);
 }
 
 void loop() {
   if (WiFi.status()== WL_CONNECTED){   
     //Reading and printing of PIR's value.
-    pir = digitalRead(PIRPIN);
+    bool pirVal = pir->isDetected();
     Serial.print("Valore del pir: ");
-    Serial.println(pir);
-    presence = false;
-    if (pir == 1) {
-      presence = true;
-    }
+    Serial.println(pirVal);
 
     //Reading and printing of photoresistor's value.
-    lightSensor = analogRead(LSPIN);
-    lsVolt = ((double) lightSensor) * 5/1024;
-    lsVolt = lsVolt/5.0;  
+    bool lsVal = lightSensor->isBright();
     Serial.print("Valore del fotoresistore: ");
-    Serial.println(lsVolt);
-    brightness = false;
-    if (lsVolt >= 1.5) {
-      brightness = true;
-    }
+    Serial.println(lsVal);
 
     //Sending retrieved data
-    int code = sendData(serviceURI, presence, brightness);   
+    int code = sendData(serviceURI, pirVal, lsVal);   
     if (code == 200){
       Serial.println("ok");
     } else {

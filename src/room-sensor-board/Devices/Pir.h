@@ -3,8 +3,8 @@
 
 class Pir {
  
-public: 
-  virtual bool isDetected() = 0;
+  public: 
+    virtual bool isDetected() = 0;
   
 };
 
