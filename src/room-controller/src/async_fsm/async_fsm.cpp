@@ -1,6 +1,6 @@
 #include "async_fsm.h"
 #include "Arduino.h"
-#include "EnableInterrupt.h"
+#include "../lib/EnableInterrupt/EnableInterrupt.h"
 
 #define MAX_EVQUEUE_SIZE 20 
 

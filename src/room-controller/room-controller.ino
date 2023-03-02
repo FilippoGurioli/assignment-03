@@ -1,10 +1,10 @@
-#include "async_fsm.h"
-#include "Led.h"
-#include "SerialPortImpl.h"
-#include "EventHandler.h"
-#include "BluetoothPortImpl.h"
+#include "src/async_fsm/async_fsm.h"
+#include "src/Led/Led.h"
+#include "src/SerialPort/SerialPortImpl.h"
+#include "src/EventHandler.h"
+#include "src/BluetoothPort/BluetoothPortImpl.h"
 
-#include <ServoTimer2.h>
+#include "src/lib/ServoTimer2/ServoTimer2.h"
 
 #define SERIAL_IN_PIN 0
 #define SERVOPIN 5
