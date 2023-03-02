@@ -1,7 +1,7 @@
 #ifndef __SERIALPORT__
 #define __SERIALPORT__
 
-#include "async_fsm.h"
+#include "../async_fsm/async_fsm.h"
 
 #define DATA_AVAILABLE_EVENT 1
 

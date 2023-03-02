@@ -2,7 +2,7 @@
 #define __BTPORTIMPL__
 
 #include "BluetoothPort.h"
-#include "AltSoftSerial.h"
+#include "../lib/AltSoftSerial/AltSoftSerial.h"
 
 class BTPortImpl : public BTPort {
     public:

@@ -1,12 +1,12 @@
 #ifndef __EVENTHANDLER__
 #define __EVENTHANDLER__
 
-#include "async_fsm.h"
-#include "Led.h"
-#include "SerialPortImpl.h"
-#include "BluetoothPortImpl.h"
+#include "async_fsm/async_fsm.h"
+#include "Led/Led.h"
+#include "SerialPort/SerialPortImpl.h"
+#include "BluetoothPort/BluetoothPortImpl.h"
 
-#include <ServoTimer2.h>
+#include "lib/ServoTimer2/ServoTimer2.h"
 #include <ctype.h>
 
 #define BUFFER_SIZE 40

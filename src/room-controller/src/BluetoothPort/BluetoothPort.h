@@ -1,7 +1,7 @@
 #ifndef __BLUETOOTHPORT__
 #define __BLUETOOTHPORT__
 
-#include "async_fsm.h"
+#include "../async_fsm/async_fsm.h"
 #include "Arduino.h"
 
 #define BLUETOOTH_EVENT 2
