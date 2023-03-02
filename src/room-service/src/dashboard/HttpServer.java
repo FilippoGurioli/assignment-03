@@ -15,18 +15,18 @@ import java.util.LinkedList;
 /*
  * Data Service as a vertx event-loop 
  */
-public class DataService extends AbstractVerticle {
+public class HttpServer extends AbstractVerticle {
 
 	private int port;
 	private static final int MAX_SIZE = 10;
-	private LinkedList<DataPoint> values;
+	private LinkedList<Data> values;
 	
 	private String light = "OFF";
 	private int degrees = 0;
 	private String presence = "0";
 	private String darkness = "0";
 	
-	public DataService(int port) {
+	public HttpServer(int port) {
 		values = new LinkedList<>();		
 		this.port = port;
 	}
@@ -67,7 +67,7 @@ public class DataService extends AbstractVerticle {
 			formatter = new SimpleDateFormat("HH:mm:ss");
 			String time = formatter.format(new Date());
 			
-			values.addFirst(new DataPoint(date, time, content));
+			values.addFirst(new Data(date, time, content));
 			if (values.size() > MAX_SIZE) {
 				values.removeLast();
 			}
@@ -84,7 +84,7 @@ public class DataService extends AbstractVerticle {
 	private void handleGetData(RoutingContext routingContext) {
 		//Build response
 		JsonArray arr = new JsonArray();
-		for (DataPoint data : values) {
+		for (Data data : values) {
 			JsonObject allData = new JsonObject();
 			allData.put("Date", data.getDate());
 			allData.put("Time", data.getTime());

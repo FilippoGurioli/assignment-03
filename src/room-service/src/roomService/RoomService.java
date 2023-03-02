@@ -2,6 +2,9 @@ package roomService;
 
 import java.util.Optional;
 
+import dashboard.HttpServer;
+import io.vertx.core.Vertx;
+
 /**
  * Application main class, it contains the main logic of information exchanging between other subsystems.
  */
@@ -14,6 +17,11 @@ public class RoomService {
 
 	public RoomService() throws Exception {
 		time.start();
+		
+		//Starts the HTTP server
+		Vertx vertx = Vertx.vertx();
+		HttpServer service = new HttpServer(8080);
+		vertx.deployVerticle(service);
 		
 		while (true) {
 			Thread.sleep(10_000);

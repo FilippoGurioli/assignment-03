@@ -1,11 +1,11 @@
 package dashboard;
 
-class DataPoint {
+class Data {
 	private String date;
 	private String time;
 	private String content;
 	
-	public DataPoint(String date, String time, String content) {
+	public Data(String date, String time, String content) {
 		this.date = date;
 		this.time = time;
 		this.content = content;
