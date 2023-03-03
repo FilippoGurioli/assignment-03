@@ -37,9 +37,6 @@ class EventHandler : public AsyncFSM {
       int evType = ev->getType();
       String msg = read(evType);
 
-      /*Response for debugging*/
-      Serial.println("A-received: " + msg);
-
       /*Command handling*/
       bool flag = true;
       for (int i = 1; i < msg.length(); i++) {

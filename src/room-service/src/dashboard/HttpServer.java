@@ -13,7 +13,6 @@ import roomService.RoomService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.Optional;
 
 /*
  * Data Service as a vertx event-loop 
@@ -68,14 +67,13 @@ public class HttpServer extends AbstractVerticle {
 				content = "Tende: " + res.getString("value") + "%";
 				degrees = Integer.parseInt(res.getString("value")); //Update blinds value
 			}
-			Optional<Led> optLight = Optional.empty();
 			if (light.equals("ON")) {
-				optLight = Optional.of(Led.ON);
+				rs.executeCommand(Led.ON);
 			}
 			if (light.equals("OFF")) {
-				optLight = Optional.of(Led.OFF);
+				rs.executeCommand(Led.OFF);
 			}
-			rs.executeCommand(optLight, Optional.of(degrees));
+			rs.executeCommand(degrees);
 			formatter = new SimpleDateFormat("HH:mm:ss");
 			String time = formatter.format(new Date());
 			
@@ -150,7 +148,7 @@ public class HttpServer extends AbstractVerticle {
 		response.setStatusCode(statusCode).end();
 	}
 
-	private void log(String msg) {
+	private void log(final String msg) {
 		System.out.println("[HTTP SERVER] "+msg);
 	}
 

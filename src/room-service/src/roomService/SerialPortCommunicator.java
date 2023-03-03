@@ -1,7 +1,6 @@
 package roomService;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
@@ -18,6 +17,7 @@ public class SerialPortCommunicator {
 	private String data = "";
 	private boolean stream = false;
 	private SerialPort comPort;
+	private String buffer = "";
 	
 	public SerialPortCommunicator(final RoomService caller) throws Exception {
 		for (var port : SerialPort.getCommPorts()) {
@@ -31,7 +31,7 @@ public class SerialPortCommunicator {
 		}
 		comPort.setComPortParameters(BAUD_RATE, Byte.SIZE, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
 		if (comPort.openPort()) {			
-			Log("Connected to " + comPort + " port");
+			log("Connected to " + comPort + " port");
 		} else {
 			System.err.println("UnopenablePortException. Cannot open the " + comPort + " port. Maybe it's already in use.");
 			throw new Exception();
@@ -45,7 +45,7 @@ public class SerialPortCommunicator {
 
 		   @Override
 			public void serialEvent(final SerialPortEvent event) {
-				String msg = new String(event.getReceivedData(), StandardCharsets.UTF_8);
+				final String msg = new String(event.getReceivedData(), StandardCharsets.UTF_8);
 				msg.chars().forEach(ch -> {
 					if (ch == '/') {
 						stream = !stream;
@@ -55,18 +55,23 @@ public class SerialPortCommunicator {
 				});
 				if (!stream) {					
 					if (data.equals("ON")) {
-						caller.executeCommand(Optional.of(Led.ON), Optional.empty());
+						caller.executeCommand(Led.ON);
 						data = "";
 					} else if (data.equals("OFF")) {
-						caller.executeCommand(Optional.of(Led.OFF), Optional.empty());
+						caller.executeCommand(Led.OFF);
 						data = "";
 					} else {					
 						try {
-							caller.executeCommand(Optional.empty(), Optional.of(Integer.parseInt(data)));
+							caller.executeCommand(Integer.parseInt(data));
 							data = "";
 						} catch (final NumberFormatException e) {
 							//if data isn't "ON" or "OFF" nor a value it should be a debugging message
-							Log(msg.replace("/", ""));
+							if (!msg.contains("\n")) {
+								buffer += msg.replace("/", "");
+							} else {								
+								log(buffer);
+								buffer = "";
+							}
 						}
 					}
 				}
@@ -76,11 +81,11 @@ public class SerialPortCommunicator {
 	
 	public void send(final String msg) {
 		final String prtMsg = msg + "\n";
-		Log("Send: " + msg);
+		log("Send: " + msg);
 		this.comPort.writeBytes(prtMsg.getBytes(), prtMsg.getBytes().length);
 	}
 	
-	private void Log(String msg) {
+	private void log(final String msg) {
 		System.out.println("[SERIAL PORT] " + msg);
 	}
 }

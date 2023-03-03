@@ -1,7 +1,5 @@
 package roomService;
 
-import java.util.Optional;
-
 import dashboard.HttpServer;
 import io.vertx.core.Vertx;
 
@@ -43,27 +41,30 @@ public class RoomService {
 		}
 	}
 	
-	public void executeCommand(final Optional<Led> light, final Optional<Integer> servo) {
-		if (light.isPresent() && !light.get().equals(this.p.getLed())) {
-			this.p.setLed(light.get());
-			Log("LED turned " + light.get());
+	public void executeCommand(final Led light) {
+		if (!light.equals(this.p.getLed())) {
+			this.p.setLed(light);
+			log("LED turned " + light);
 		}
-		if (servo.isPresent() && !servo.get().equals(this.p.getServo())) {
-			this.p.setServo(servo.get());
-			Log("Servo set at " + servo.get());
+	}
+	
+	public void executeCommand(final int servo) {
+		if (servo != this.p.getServo()) {
+			this.p.setServo(servo);
+			log("Servo set at " + this.p.getServo());
 		}
 	}
 	
 	private void printStatus(final String pir, final String pr) {
-		Log("----- STATUS -----");
-		Log("Time: " + time);
-		Log("PIR: " + pir);
-		Log("Light sensor: " + pr);
-		Log(this.p.toString());
-		Log("------------------");
+		log("----- STATUS -----");
+		log("Time: " + time);
+		log("PIR: " + pir);
+		log("Light sensor: " + pr);
+		log(this.p.toString());
+		log("------------------");
 	}
 	
-	private void Log(String msg) {
+	private void log(final String msg) {
 		System.out.println("[ROOM SERVICE] " + msg);
 	}
 }
