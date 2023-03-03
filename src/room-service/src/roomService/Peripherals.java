@@ -46,6 +46,6 @@ public class Peripherals {
 	}
 	
 	public String toString() {
-		return "Servo: " + this.servo + "\nLED: " + this.led + "\n";
+		return "Servo: " + this.servo + "  LED: " + this.led;
 	}
 }

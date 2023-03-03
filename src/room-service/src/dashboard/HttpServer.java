@@ -7,28 +7,32 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
+import roomService.Led;
+import roomService.RoomService;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Optional;
 
 /*
  * Data Service as a vertx event-loop 
  */
 public class HttpServer extends AbstractVerticle {
-
-	private int port;
+	
+	private static final int PORT = 8080;
 	private static final int MAX_SIZE = 10;
 	private LinkedList<Data> values;
+	private final RoomService rs;
 	
 	private String light = "OFF";
 	private int degrees = 0;
 	private boolean presence = false;
 	private boolean brightness = false;
 	
-	public HttpServer(int port) {
-		values = new LinkedList<>();		
-		this.port = port;
+	public HttpServer(RoomService rs) {
+		this.values = new LinkedList<>();
+		this.rs = rs;
 	}
 
 	@Override
@@ -42,8 +46,8 @@ public class HttpServer extends AbstractVerticle {
 		vertx
 			.createHttpServer()
 			.requestHandler(router)
-			.listen(port);
-		log("Service ready on port: " + port);
+			.listen(PORT);
+		log("Service ready on port: " + PORT);
 	}
 	
 	private void handleAddNewData(RoutingContext routingContext) {
@@ -64,6 +68,14 @@ public class HttpServer extends AbstractVerticle {
 				content = "Tende: " + res.getString("value") + "%";
 				degrees = Integer.parseInt(res.getString("value")); //Update blinds value
 			}
+			Optional<Led> optLight = Optional.empty();
+			if (light.equals("ON")) {
+				optLight = Optional.of(Led.ON);
+			}
+			if (light.equals("OFF")) {
+				optLight = Optional.of(Led.OFF);
+			}
+			rs.executeCommand(optLight, Optional.of(degrees));
 			formatter = new SimpleDateFormat("HH:mm:ss");
 			String time = formatter.format(new Date());
 			

@@ -31,7 +31,7 @@ public class SerialPortCommunicator {
 		}
 		comPort.setComPortParameters(BAUD_RATE, Byte.SIZE, SerialPort.ONE_STOP_BIT, SerialPort.NO_PARITY);
 		if (comPort.openPort()) {			
-			System.out.println("Connected to " + comPort + " port");
+			Log("Connected to " + comPort + " port");
 		} else {
 			System.err.println("UnopenablePortException. Cannot open the " + comPort + " port. Maybe it's already in use.");
 			throw new Exception();
@@ -66,7 +66,7 @@ public class SerialPortCommunicator {
 							data = "";
 						} catch (final NumberFormatException e) {
 							//if data isn't "ON" or "OFF" nor a value it should be a debugging message
-							System.out.print(msg.replace("/", ""));
+							Log(msg.replace("/", ""));
 						}
 					}
 				}
@@ -76,7 +76,11 @@ public class SerialPortCommunicator {
 	
 	public void send(final String msg) {
 		final String prtMsg = msg + "\n";
-		System.out.print("J-send: " + prtMsg);
+		Log("Send: " + msg);
 		this.comPort.writeBytes(prtMsg.getBytes(), prtMsg.getBytes().length);
+	}
+	
+	private void Log(String msg) {
+		System.out.println("[SERIAL PORT] " + msg);
 	}
 }

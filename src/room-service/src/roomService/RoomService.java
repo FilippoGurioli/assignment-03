@@ -14,14 +14,14 @@ public class RoomService {
 	private final Peripherals p = new Peripherals();
 	private final ESPEmulator esp = new ESPEmulator();
 	private final SerialPortCommunicator serialComm = new SerialPortCommunicator(this);
+	private final HttpServer httpServer = new HttpServer(this);
 
 	public RoomService() throws Exception {
 		time.start();
 		
 		//Starts the HTTP server
 		Vertx vertx = Vertx.vertx();
-		HttpServer service = new HttpServer(8080);
-		vertx.deployVerticle(service);
+		vertx.deployVerticle(httpServer);
 		
 		while (true) {
 			Thread.sleep(10_000);
@@ -46,19 +46,24 @@ public class RoomService {
 	public void executeCommand(final Optional<Led> light, final Optional<Integer> servo) {
 		if (light.isPresent() && !light.get().equals(this.p.getLed())) {
 			this.p.setLed(light.get());
-			System.out.println("LED turned " + light.get());
+			Log("LED turned " + light.get());
 		}
 		if (servo.isPresent() && !servo.get().equals(this.p.getServo())) {
 			this.p.setServo(servo.get());
-			System.out.println("Servo set at " + servo.get());
+			Log("Servo set at " + servo.get());
 		}
 	}
 	
 	private void printStatus(final String pir, final String pr) {
-		System.out.println("\nTime: " + time);
-		System.out.println("PIR: " + pir);
-		System.out.println("Light sensor: " + pr);
-		System.out.println("-----------------");
-		System.out.println(this.p);
+		Log("----- STATUS -----");
+		Log("Time: " + time);
+		Log("PIR: " + pir);
+		Log("Light sensor: " + pr);
+		Log(this.p.toString());
+		Log("------------------");
+	}
+	
+	private void Log(String msg) {
+		System.out.println("[ROOM SERVICE] " + msg);
 	}
 }
