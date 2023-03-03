@@ -55,14 +55,14 @@ public class SerialPortCommunicator {
 				});
 				if (!stream) {					
 					if (data.equals("ON")) {
-						caller.executeCommand(Led.ON);
+						caller.updatePeripheral(Led.ON);
 						data = "";
 					} else if (data.equals("OFF")) {
-						caller.executeCommand(Led.OFF);
+						caller.updatePeripheral(Led.OFF);
 						data = "";
 					} else {					
 						try {
-							caller.executeCommand(Integer.parseInt(data));
+							caller.updatePeripheral(Integer.parseInt(data));
 							data = "";
 						} catch (final NumberFormatException e) {
 							//if data isn't "ON" or "OFF" nor a value it should be a debugging message
