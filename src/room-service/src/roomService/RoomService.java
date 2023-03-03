@@ -10,10 +10,12 @@ public class RoomService {
 	
 	private final TimeThread time = new TimeThread();
 	private final Peripherals p = new Peripherals();
-	private final ESPEmulator esp = new ESPEmulator();
 	private final SerialPortCommunicator serialComm = new SerialPortCommunicator(this);
 	private final HttpServer httpServer = new HttpServer(this);
-
+	private final static int WAITING_TIME = 1000;
+	private boolean btPrivilege = false;
+	private boolean dashPrivilege = false;
+	
 	public RoomService() throws Exception {
 		time.start();
 		
@@ -22,21 +24,22 @@ public class RoomService {
 		vertx.deployVerticle(httpServer);
 		
 		while (true) {
-			Thread.sleep(10_000);
-			String pir = esp.getCommandPIR();
-			String pr = esp.getCommandPR();
-			this.printStatus(pir, pr);
-			//-----------------------SERVO AUTO-HANDLING------------------
-			if (time.isMorning() && pir.equals("PEOPLE") && this.p.getServo() == 180) {
-				this.executeCommand(0);
-			} else if (!time.isMorning() && pir.equals("NOONE") && this.p.getServo() < 180) {
-				this.executeCommand(180);
-			}
-			//-----------------------LED AUTO-HANDLING--------------------
-			if (pr.equals("BLACK") && pir.equals("PEOPLE") && this.p.getLed() == Led.OFF) {
-				this.executeCommand(Led.ON);
-			} else if (this.p.getLed() == Led.ON) {
-				this.executeCommand(Led.OFF);
+			if (!btPrivilege && !dashPrivilege) {
+				this.printStatus();
+				//-----------------------SERVO AUTO-HANDLING------------------
+				if (time.isMorning() && this.p.isPresent() && this.p.getServo() == Peripherals.MAX_DEG) {
+					this.executeCommand(Peripherals.MIN_DEG);
+				} else if (!time.isMorning() && !this.p.isPresent() && this.p.getServo() < Peripherals.MAX_DEG) {
+					this.executeCommand(Peripherals.MAX_DEG);
+				}
+				//-----------------------LED AUTO-HANDLING--------------------
+				if (!this.p.isBright() && this.p.isPresent() && this.p.getLed() == Led.OFF) {
+					this.executeCommand(Led.ON);
+				} else if (this.p.getLed() == Led.ON) {
+					this.executeCommand(Led.OFF);
+				}
+			} else {
+				Thread.sleep(WAITING_TIME);
 			}
 		}
 	}
@@ -63,11 +66,25 @@ public class RoomService {
 		log("LED turned " + light);
 	}
 	
-	private void printStatus(final String pir, final String pr) {
+	public Peripherals getPeripherals() {
+		return this.p;
+	}
+	
+	public void changePrivilegeOf(final Master master) {
+		switch(master) {
+		case BT:
+			btPrivilege = !btPrivilege;
+			break;
+		case DASH:
+			this.serialComm.send("DASH");
+			dashPrivilege = !dashPrivilege;
+			break;
+		}
+	}
+	
+	private void printStatus() {
 		log("----- STATUS -----");
 		log("Time: " + time);
-		log("PIR: " + pir);
-		log("Light sensor: " + pr);
 		log(this.p.toString());
 		log("------------------");
 	}

@@ -47,16 +47,14 @@ class EventHandler : public AsyncFSM {
       char first = msg.charAt(0);
       if (flag && (isDigit(first) || first == '-')) {
         int val = msg.toInt();
-        this->sendCommand(msg);
         val = (val >= 0 ? (val <= 180 ? map(val,0,180,750,2250) : 2250) : 750);
         servo.write(val);
       } else if (msg == "ON") {
-        this->sendCommand("ON");
         led->switchOn();
       } else if (msg == "OFF") {
-        this->sendCommand("OFF");
         led->switchOff();
       }
+      this->sendCommand(msg);
       msg = "";
     }
 

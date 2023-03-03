@@ -53,14 +53,16 @@ public class SerialPortCommunicator {
 						data += (char) ch;
 					}
 				});
-				if (!stream) {					
+				if (!stream) {
 					if (data.equals("ON")) {
 						caller.updatePeripheral(Led.ON);
 						data = "";
 					} else if (data.equals("OFF")) {
 						caller.updatePeripheral(Led.OFF);
 						data = "";
-					} else {					
+					} else if (data.equals("BT")) {
+						caller.changePrivilegeOf(Master.BT);
+					} else {
 						try {
 							caller.updatePeripheral(Integer.parseInt(data));
 							data = "";
@@ -68,7 +70,7 @@ public class SerialPortCommunicator {
 							//if data isn't "ON" or "OFF" nor a value it should be a debugging message
 							if (!msg.contains("\n")) {
 								buffer += msg.replace("/", "");
-							} else {								
+							} else {
 								log(buffer);
 								buffer = "";
 							}
@@ -78,13 +80,13 @@ public class SerialPortCommunicator {
 			}
 		});
 	}
-	
+
 	public void send(final String msg) {
 		final String prtMsg = msg + "\n";
 		log("Send: " + msg);
 		this.comPort.writeBytes(prtMsg.getBytes(), prtMsg.getBytes().length);
 	}
-	
+
 	private void log(final String msg) {
 		System.out.println("[SERIAL PORT] " + msg);
 	}
