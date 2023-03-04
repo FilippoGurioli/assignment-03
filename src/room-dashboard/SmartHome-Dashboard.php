@@ -35,6 +35,7 @@
         </header>
         <nav>
             <div id="btnControls">Controlli</div>
+            <div id="btnAuto">Auto</div>
             <div id="btnHistory">Storico</div>
         </nav>
         <section id="controls">

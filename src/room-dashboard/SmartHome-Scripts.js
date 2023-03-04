@@ -1,19 +1,26 @@
 let btnLights = document.getElementById("lights");
 let rngBlinds = document.getElementById("blinds");
 let btnControls = document.getElementById("btnControls");
+let btnAuto = document.getElementById("btnAuto");
 let btnHistory = document.getElementById("btnHistory");
+let auto = true;
 
 //Setup
+btnAuto.style.backgroundColor = "grey";
+btnAuto.addEventListener("click", btnAuto.func=(ev)=>autoMode(ev));
 updateCurrentState();
 
 //Controls' event listeners
 btnLights.addEventListener("click", function(event){
     event.preventDefault();
-    if(btnLights.value == "OFF"){
+    if (auto) {
+        disableAuto();
+    }
+    if (btnLights.value == "OFF") {
         btnLights.value = "ON";
         btnLights.style.backgroundImage = "linear-gradient(to bottom right, #22c1c3, #fdbb2d)";
         sendUpdate("lights", "ON");
-    } else{
+    } else {
         btnLights.value = "OFF";
         btnLights.style.backgroundImage = null;
         sendUpdate("lights", "OFF");
@@ -21,9 +28,23 @@ btnLights.addEventListener("click", function(event){
 });
 
 rngBlinds.addEventListener("change", function(event){
+    if (auto) {
+        disableAuto();
+    }
+    event.preventDefault();
     document.querySelector("div p").innerHTML = rngBlinds.value;
     sendUpdate("blinds", rngBlinds.value.toString());
 });
+
+function autoMode(event){
+    event.preventDefault();
+    alert("auto mode on");
+}
+
+function noAutoMode(event){
+    event.preventDefault();
+    enableAuto();
+}
 
 //Navigation
 btnControls.addEventListener("click", function(event){
@@ -39,7 +60,6 @@ btnHistory.addEventListener("click", function(event){
 });
 
 //Functions
-
 function sendUpdate(key, value) {
     //Builds JSON message
     let values;
@@ -47,12 +67,14 @@ function sendUpdate(key, value) {
         values = {'type' : "light", 'value' : value};
     } else if (key == "blinds") {
         values = {'type' : "blind", 'value' : value};
+    } else if (key == "master") {
+        values = {'type' : "master"};
     }
 	var jsonValues = JSON.stringify(values);
 
     //Sends POST request with JSON message
     axios.post('http://localhost:8080/api/data', jsonValues).then(response => {
-		console.log("Sended correctly.");
+		console.log("Sent correctly.");
     });
 }
 
@@ -77,12 +99,38 @@ function updateHistory() {
     });
 }
 
-//TO-DO
+//TO-DO?
 function updateCurrentState(){
     axios.get('http://localhost:8080/api/currentData').then(response => {
         let data = response.data;
         btnLights.value = data["light"];
         rngBlinds.value = data["degrees"];
+        let master = data["master"];
+        if (master == "DASH") {
+            auto = "false";
+        } else {
+            auto = "true";
+        }
         document.querySelector("div p").innerHTML = rngBlinds.value;
     });
+}
+
+function enableAuto(){
+    askPriority();
+    btnAuto.removeEventListener("click", btnAuto.func);
+    btnAuto.addEventListener("click", btnAuto.func=(ev)=>autoMode(ev));
+    btnAuto.style.backgroundColor = "grey";
+    auto = true;
+}
+
+function disableAuto(){
+    askPriority();
+    btnAuto.removeEventListener("click", btnAuto.func);
+    btnAuto.addEventListener("click", btnAuto.func=(ev)=>noAutoMode(ev));
+    btnAuto.style.backgroundColor = "rgb(20, 20, 20)";
+    auto = false;
+}
+
+function askPriority(){
+    sendUpdate("master", null);
 }

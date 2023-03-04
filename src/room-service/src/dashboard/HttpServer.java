@@ -9,6 +9,7 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
 
 import roomService.Led;
+import roomService.Master;
 import roomService.RoomService;
 
 /**
@@ -66,6 +67,9 @@ public class HttpServer extends AbstractVerticle {
 				content = "Tende: " + res.getString("value") + "%";
 				rs.executeCommand(Integer.parseInt(res.getString("value"))); //Update blinds value
 			}
+			if (res.getString("type").equals("master")) {
+				rs.changePrivilegeOf(Master.DASH);
+			}
 			
 			//Add POST's record to history list
 			if(!content.equals("")) {
@@ -118,6 +122,7 @@ public class HttpServer extends AbstractVerticle {
 		JsonObject allData = new JsonObject();
 		allData.put("light", rs.getPeripherals().getLed().toString());
 		allData.put("degrees", rs.getPeripherals().getServo());
+		allData.put("master", "rs.getMaster()");
 		
 		//Send response
 		HttpServerResponse response = routingContext.response();
