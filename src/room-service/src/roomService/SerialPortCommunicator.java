@@ -59,6 +59,7 @@ public class SerialPortCommunicator {
 						data += (char) ch;
 					}
 				});
+				data = data.replace("DASH", "");
 				if (!stream) {
 					if (data.equals("ON")) {
 						caller.updatePeripheral(Led.ON);
@@ -74,12 +75,13 @@ public class SerialPortCommunicator {
 							data = "";
 						} catch (final NumberFormatException e) {
 							//if data isn't "ON" or "OFF" nor a value it should be a debugging message
-							if (!msg.contains("\n")) {
+							/*if (!msg.contains("\n")) {
 								buffer += msg.replace("/", "");
 							} else {
 								log(buffer);
 								buffer = "";
-							}
+							}*/
+							System.out.print(msg);
 						}
 					}
 				}
