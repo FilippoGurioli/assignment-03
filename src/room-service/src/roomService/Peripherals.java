@@ -4,10 +4,12 @@ public class Peripherals {
 
 	private int servo;
 	private Led led;
+	private boolean presence;
+	private boolean brightness;
 	public static final int MAX_DEG = 180;
 	public static final int MIN_DEG = 0;
 	
-	public Peripherals(final int servo, final Led led) {
+	public Peripherals(final int servo, final Led led, final boolean presence, final boolean brightness) {
 		if (servo > MAX_DEG) {
 			this.servo = MAX_DEG;
 		} else if (servo < MIN_DEG) {
@@ -31,6 +33,14 @@ public class Peripherals {
 		return this.led;
 	}
 	
+	public boolean isBright() {
+		return this.brightness;
+	}
+	
+	public boolean isPresent() {
+		return this.presence;
+	}
+	
 	public void setServo(final int servo) {
 		if (servo > MAX_DEG) {
 			this.servo = MAX_DEG;
@@ -45,7 +55,16 @@ public class Peripherals {
 		this.led = led;
 	}
 	
+	public void setBrightness(final boolean brightness) {
+		this.brightness = brightness;
+	}
+	
+	public void setPresence(final boolean presence) {
+		this.presence = presence;
+	}
+	
 	public String toString() {
-		return "Servo: " + this.servo + "  LED: " + this.led;
+		return "Presence: " + this.presence + " Bright: " + this.brightness + "\n"
+				+ "Servo: " + this.servo + "  LED: " + this.led;
 	}
 }

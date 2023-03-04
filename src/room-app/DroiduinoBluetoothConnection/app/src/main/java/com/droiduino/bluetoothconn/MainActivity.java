@@ -1,9 +1,11 @@
 package com.droiduino.bluetoothconn;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -16,8 +18,10 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 
@@ -27,6 +31,8 @@ import java.io.OutputStream;
 import java.util.UUID;
 
 import static android.content.ContentValues.TAG;
+
+import com.google.android.material.slider.Slider;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,24 +50,30 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // UI Initialization
         final Button buttonConnect = findViewById(R.id.buttonConnect);
         final Toolbar toolbar = findViewById(R.id.toolbar);
         final ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.GONE);
         final TextView textViewInfo = findViewById(R.id.textViewInfo);
-        final Button buttonToggle = findViewById(R.id.buttonToggle);
-        buttonToggle.setEnabled(false);
+        final Switch switchToggle = findViewById(R.id.switch1);
+        final Slider main_slider = findViewById(R.id.main_slider);
+        final TextView textViewBlinds = findViewById(R.id.textViewBlinds);
+        textViewBlinds.setEnabled(false);
+        main_slider.setEnabled(false);
+        switchToggle.setEnabled(false);
+        switchToggle.setText(switchToggle.getTextOff());
         final ImageView imageView = findViewById(R.id.imageView);
         imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
+
+
 
         // If a bluetooth device has been selected from SelectDeviceActivity
         deviceName = getIntent().getStringExtra("deviceName");
         if (deviceName != null){
             // Get the device address to make BT Connection
             deviceAddress = getIntent().getStringExtra("deviceAddress");
-            // Show progree and connection status
+            // Show progress and connection status
             toolbar.setSubtitle("Connecting to " + deviceName + "...");
             progressBar.setVisibility(View.VISIBLE);
             buttonConnect.setEnabled(false);
@@ -89,7 +101,9 @@ public class MainActivity extends AppCompatActivity {
                                 toolbar.setSubtitle("Connected to " + deviceName);
                                 progressBar.setVisibility(View.GONE);
                                 buttonConnect.setEnabled(true);
-                                buttonToggle.setEnabled(true);
+                                switchToggle.setEnabled(true);
+                                main_slider.setEnabled(true);
+                                textViewBlinds.setEnabled(true);
                                 break;
                             case -1:
                                 toolbar.setSubtitle("Device fails to connect");
@@ -101,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!QUI PER MODIFICARE ARDUINO->ANDROID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     case MESSAGE_READ:
                         String arduinoMsg = msg.obj.toString(); // Read message from Arduino
+<<<<<<< Updated upstream:src/room-app/DroiduinoBluetoothConnection/app/src/main/java/com/droiduino/bluetoothconn/MainActivity.java
                         arduinoMsg = arduinoMsg.replaceAll("[^a-zA-Z0-9_-]", "");
                         if (arduinoMsg.equals("ON")) {
                             imageView.setBackgroundColor(getResources().getColor(R.color.colorOn));
@@ -112,6 +127,19 @@ public class MainActivity extends AppCompatActivity {
                             buttonToggle.setText("turn on");
                         } else {
                             textViewInfo.setText("Arduino Message - Servo: " + arduinoMsg);
+=======
+                        switch (arduinoMsg.toLowerCase()){
+                            case "led is turned on":
+                                imageView.setBackgroundColor(getResources().getColor(R.color.colorOn));
+                                textViewInfo.setText("Arduino Message : " + arduinoMsg);
+                                switchToggle.setChecked(true);
+                                break;
+                            case "led is turned off":
+                                imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
+                                textViewInfo.setText("Arduino Message : " + arduinoMsg);
+                                switchToggle.setChecked(false);
+                                break;
+>>>>>>> Stashed changes:room-app/DroiduinoBluetoothConnection/app/src/main/java/com/droiduino/bluetoothconn/MainActivity.java
                         }
                         break;
                 }
@@ -128,11 +156,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Button to ON/OFF LED on Arduino Board
-        buttonToggle.setOnClickListener(new View.OnClickListener() {
+        // Slider for blinds control
+        main_slider.addOnChangeListener(new Slider.OnChangeListener() {
+            @SuppressLint("RestrictedApi")
             @Override
-            public void onClick(View view) {
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                connectedThread.write(String.valueOf(value) + "\n");
+            }
+        });
+
+        // Button to ON/OFF LED on Arduino Board
+        switchToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String cmdText = null;
+<<<<<<< Updated upstream:src/room-app/DroiduinoBluetoothConnection/app/src/main/java/com/droiduino/bluetoothconn/MainActivity.java
                 String btnState = buttonToggle.getText().toString().toLowerCase();
                 switch (btnState){
                     case "turn on":
@@ -145,6 +183,16 @@ public class MainActivity extends AppCompatActivity {
                         // Command to turn off LED on Arduino. Must match with the command in Arduino code
                         cmdText = "OFF\n";
                         break;
+=======
+                if (isChecked) {
+                    switchToggle.setText(switchToggle.getTextOn());
+                    // Command to turn on LED on Arduino. Must match with the command in Arduino code
+                    cmdText = "ON\n";
+                } else {
+                    switchToggle.setText(switchToggle.getTextOff());
+                    // Command to turn off LED on Arduino. Must match with the command in Arduino code
+                    cmdText = "OFF\n";
+>>>>>>> Stashed changes:room-app/DroiduinoBluetoothConnection/app/src/main/java/com/droiduino/bluetoothconn/MainActivity.java
                 }
                 // Send command to Arduino board
                 connectedThread.write(cmdText);

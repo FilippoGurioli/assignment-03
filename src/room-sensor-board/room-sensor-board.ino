@@ -1,7 +1,7 @@
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include "./util/devices/PirImpl.h"
-#include "./util/devices/LightSensorImpl.h"
+#include "./src/devices/PirImpl.h"
+#include "./src/devices/LightSensorImpl.h"
 
 #define LSPIN 4  //Photoresistor pin
 #define PIRPIN 5 //Pir pin
@@ -11,9 +11,9 @@ LightSensorImpl* lightSensor;
 bool prevPirVal = false;
 bool prevLsVal = false;
 
-const char* ssid = /*"Galaxy A519DFD";*/"WINTERFIRE-5G";
-const char* password = /*"aivaivaiv";*/"matt1a51lv1avanna5andr00";
-const char* serviceURI = "http://192.168.178.22:8080/api/ESPdata";//"http://192.168.6.20:8080/api/ESPdata";
+const char* ssid = /*"Galaxy A519DFD";*/"ReteDiFilo";
+const char* password = /*"aivaivaiv";*/"pappapoppa";
+const char* serviceURI = "http://26.70.255.91/8:8080/api/ESPdata";//"http://192.168.6.20:8080/api/ESPdata";
 
 void connectToWifi(const char* ssid, const char* password){
   WiFi.begin(ssid, password);
