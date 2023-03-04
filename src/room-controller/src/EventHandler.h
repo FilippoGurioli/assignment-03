@@ -44,17 +44,24 @@ class EventHandler : public AsyncFSM {
           flag = false;
         }
       }
-      char first = msg.charAt(0);
-      if (flag && (isDigit(first) || first == '-')) {
-        int val = msg.toInt();
-        val = (val >= 0 ? (val <= 180 ? map(val,0,180,750,2250) : 2250) : 750);
-        servo.write(val);
-      } else if (msg == "ON") {
-        led->switchOn();
-      } else if (msg == "OFF") {
-        led->switchOff();
+      /*Arduino takes commands only from backend, becouse it's the onlyone who really knows who has privileges.
+        For this reason if the command comes from bt, arduino only repeat that command to backend, in the other 
+        case it execute the command.*/
+      if (evType == BLUETOOTH_EVENT) {
+        this->repeatCommand(msg);
+      } else {
+        char first = msg.charAt(0);
+        if (flag && (isDigit(first) || first == '-')) {
+          int val = msg.toInt();
+          val = (val >= 0 ? (val <= 180 ? map(val,0,180,750,2250) : 2250) : 750);
+          servo.write(val);
+        } else if (msg == "ON") {
+          led->switchOn();
+        } else if (msg == "OFF") {
+          led->switchOff();
+        }
+        this->broadcastCommand(msg);
       }
-      this->sendCommand(msg);
       msg = "";
     }
 
@@ -77,9 +84,14 @@ class EventHandler : public AsyncFSM {
     Arduino to Java - must have "/" before and after the command
     Java to Arduino - must have "\n" at the end of the command
     */
-    void sendCommand(String command) {
+    void broadcastCommand(String command) {
       Serial.print("/" + command + "/");
       this->btPort->println(command);
+    }
+
+    /*Repeat the command received from mobile to backend*/
+    void repeatCommand(String command) {
+      Serial.print("/BT:" + command + "/");
     }
 };
 

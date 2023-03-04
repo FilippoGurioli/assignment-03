@@ -143,4 +143,5 @@ public class RoomService {
 	private void log(final String msg) {
 		System.out.println("[ROOM SERVICE] " + msg);
 	}
+
 }
