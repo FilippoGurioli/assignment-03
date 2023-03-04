@@ -138,6 +138,9 @@ public class RoomService {
 		if (command.equals("UPDATE")) {
 			this.serialComm.send(this.p.getLed().toString());
 			this.serialComm.send(this.p.getServo() + "");
+			if (this.dashPrivilege) {
+				this.serialComm.send("DASH");
+			}
 		}
 	}
 	
