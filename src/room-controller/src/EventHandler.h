@@ -37,19 +37,19 @@ class EventHandler : public AsyncFSM {
       int evType = ev->getType();
       String msg = read(evType);
 
-      /*Command handling*/
-      bool flag = true;
-      for (int i = 1; i < msg.length(); i++) {
-        if (!isDigit(msg.charAt(i))) {
-          flag = false;
-        }
-      }
       /*Arduino takes commands only from backend, becouse it's the onlyone who really knows who has privileges.
         For this reason if the command comes from bt, arduino only repeat that command to backend, in the other 
         case it execute the command.*/
       if (evType == BLUETOOTH_EVENT) {
         this->repeatCommand(msg);
       } else {
+        /*Command handling*/
+        bool flag = true;
+        for (int i = 1; i < msg.length(); i++) {
+          if (!isDigit(msg.charAt(i))) {
+            flag = false;
+          }
+        }
         char first = msg.charAt(0);
         if (flag && (isDigit(first) || first == '-')) {
           int val = msg.toInt();
@@ -73,7 +73,7 @@ class EventHandler : public AsyncFSM {
           if (ch != -1) {
             msg += (char) ch;
           }
-          } while(ch != '\n');
+        } while(ch != '\n');
       /*Formatting the msg*/
       msg.remove(msg.length()-1);
       return msg;
