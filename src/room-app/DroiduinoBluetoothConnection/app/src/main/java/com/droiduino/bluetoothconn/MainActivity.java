@@ -115,33 +115,19 @@ public class MainActivity extends AppCompatActivity {
 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!QUI PER MODIFICARE ARDUINO->ANDROID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     case MESSAGE_READ:
                         String arduinoMsg = msg.obj.toString(); // Read message from Arduino
-<<<<<<< Updated upstream:src/room-app/DroiduinoBluetoothConnection/app/src/main/java/com/droiduino/bluetoothconn/MainActivity.java
                         arduinoMsg = arduinoMsg.replaceAll("[^a-zA-Z0-9_-]", "");
                         if (arduinoMsg.equals("ON")) {
                             imageView.setBackgroundColor(getResources().getColor(R.color.colorOn));
-                            textViewInfo.setText("Arduino Message - LED: " + arduinoMsg);
-                            buttonToggle.setText("turn off");
+                            textViewInfo.setText("Arduino Message : " + arduinoMsg);
+                            switchToggle.setChecked(true);
                         } else if (arduinoMsg.equals("OFF")) {
                             imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
-                            textViewInfo.setText("Arduino Message - LED : " + arduinoMsg);
-                            buttonToggle.setText("turn on");
+                            textViewInfo.setText("Arduino Message : " + arduinoMsg);
+                            switchToggle.setChecked(false);
                         } else {
                             textViewInfo.setText("Arduino Message - Servo: " + arduinoMsg);
-=======
-                        switch (arduinoMsg.toLowerCase()){
-                            case "led is turned on":
-                                imageView.setBackgroundColor(getResources().getColor(R.color.colorOn));
-                                textViewInfo.setText("Arduino Message : " + arduinoMsg);
-                                switchToggle.setChecked(true);
-                                break;
-                            case "led is turned off":
-                                imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
-                                textViewInfo.setText("Arduino Message : " + arduinoMsg);
-                                switchToggle.setChecked(false);
-                                break;
->>>>>>> Stashed changes:room-app/DroiduinoBluetoothConnection/app/src/main/java/com/droiduino/bluetoothconn/MainActivity.java
                         }
-                        break;
+                    }
                 }
             }
         };
@@ -170,20 +156,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 String cmdText = null;
-<<<<<<< Updated upstream:src/room-app/DroiduinoBluetoothConnection/app/src/main/java/com/droiduino/bluetoothconn/MainActivity.java
-                String btnState = buttonToggle.getText().toString().toLowerCase();
-                switch (btnState){
-                    case "turn on":
-                        //buttonToggle.setText("Turn Off");
-                        // Command to turn on LED on Arduino. Must match with the command in Arduino code
-                        cmdText = "ON\n";
-                        break;
-                    case "turn off":
-                        //buttonToggle.setText("Turn On");
-                        // Command to turn off LED on Arduino. Must match with the command in Arduino code
-                        cmdText = "OFF\n";
-                        break;
-=======
+
                 if (isChecked) {
                     switchToggle.setText(switchToggle.getTextOn());
                     // Command to turn on LED on Arduino. Must match with the command in Arduino code
@@ -192,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
                     switchToggle.setText(switchToggle.getTextOff());
                     // Command to turn off LED on Arduino. Must match with the command in Arduino code
                     cmdText = "OFF\n";
->>>>>>> Stashed changes:room-app/DroiduinoBluetoothConnection/app/src/main/java/com/droiduino/bluetoothconn/MainActivity.java
                 }
                 // Send command to Arduino board
                 connectedThread.write(cmdText);
