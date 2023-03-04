@@ -32,7 +32,7 @@ public class RoomService {
 		
 		while (true) {
 			Thread.sleep(WAITING_TIME*3);
-			if (!btPrivilege && !dashPrivilege) {
+			if (this.getMaster() == Master.AUTO) {
 				this.printStatus();
 				//-----------------------SERVO AUTO-HANDLING------------------
 				if (time.isMorning() && this.p.isPresent() && this.p.getServo() == Peripherals.MAX_DEG) {
@@ -112,7 +112,13 @@ public class RoomService {
 			this.serialComm.send("DASH");
 			dashPrivilege = !dashPrivilege;
 			break;
+		case AUTO:
+			break;
 		}
+	}
+	
+	public Master getMaster() {
+		return dashPrivilege ? Master.DASH : (btPrivilege ? Master.BT : Master.AUTO);
 	}
 	
 	/**

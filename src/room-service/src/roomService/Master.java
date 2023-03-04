@@ -5,5 +5,5 @@ package roomService;
  */
 public enum Master {
 
-	BT, DASH;
+	BT, DASH, AUTO;
 }
