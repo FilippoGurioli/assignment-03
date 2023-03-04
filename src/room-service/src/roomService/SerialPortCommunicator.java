@@ -67,7 +67,7 @@ public class SerialPortCommunicator {
 						caller.updatePeripheral(Led.OFF);
 						data = "";
 					} else if (data.contains("BT:")) {
-						//caller.btcHandler(data.replace("BT:", ""));
+						caller.btcHandler(data.replace("BT:", ""));
 					} else {
 						try {
 							caller.updatePeripheral(Integer.parseInt(data));
