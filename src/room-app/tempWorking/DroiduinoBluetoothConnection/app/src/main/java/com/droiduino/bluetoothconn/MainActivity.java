@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                         switch(msg.arg1){
                             case 1:
                                 toolbar.setSubtitle("Connected to " + deviceName);
-                                connectedThread.write("UPDATE");
+                                connectedThread.write("UPDATE\n");
                                 progressBar.setVisibility(View.GONE);
                                 buttonConnect.setEnabled(true);
                                 switchToggle.setEnabled(true);

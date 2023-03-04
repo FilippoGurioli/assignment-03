@@ -47,6 +47,7 @@ public class RoomService {
 					this.executeCommand(Led.OFF);
 				}
 			} else {
+				printStatus();
 				Thread.sleep(WAITING_TIME);
 			}
 		}
@@ -133,6 +134,13 @@ public class RoomService {
 		}
 	}
 	
+	public void btcHandler(final String command) {
+		if (command.equals("UPDATE")) {
+			this.serialComm.send(this.p.getLed().toString());
+			this.serialComm.send(this.p.getServo() + "");
+		}
+	}
+	
 	public LinkedList<Data> getHistory() {
 		return valuesHistory;
 	}
@@ -140,8 +148,7 @@ public class RoomService {
 	private void printStatus() {
 		log("----- STATUS -----");
 		log("Time: " + time);
-		log("BTMaster: " + btPrivilege);
-		log("DASHMaster: " + dashPrivilege);
+		log("Master: " + getMaster());
 		log(this.p.toString());
 		log("------------------");
 	}
@@ -149,5 +156,6 @@ public class RoomService {
 	private void log(final String msg) {
 		System.out.println("[ROOM SERVICE] " + msg);
 	}
+
 
 }

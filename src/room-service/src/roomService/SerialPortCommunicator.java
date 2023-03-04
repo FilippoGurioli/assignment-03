@@ -59,6 +59,7 @@ public class SerialPortCommunicator {
 						data += (char) ch;
 					}
 				});
+				data = data.replace("DASH", "");
 				if (!stream) {
 					if (data.equals("ON")) {
 						caller.updatePeripheral(Led.ON);
@@ -67,19 +68,20 @@ public class SerialPortCommunicator {
 						caller.updatePeripheral(Led.OFF);
 						data = "";
 					} else if (data.contains("BT:")) {
-						//caller.btcHandler(data.replace("BT:", ""));
+						caller.btcHandler(data.replace("BT:", ""));
 					} else {
 						try {
 							caller.updatePeripheral(Integer.parseInt(data));
 							data = "";
 						} catch (final NumberFormatException e) {
 							//if data isn't "ON" or "OFF" nor a value it should be a debugging message
-							if (!msg.contains("\n")) {
+							/*if (!msg.contains("\n")) {
 								buffer += msg.replace("/", "");
 							} else {
 								log(buffer);
 								buffer = "";
-							}
+							}*/
+							System.out.print(msg);
 						}
 					}
 				}

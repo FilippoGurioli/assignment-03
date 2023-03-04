@@ -78,7 +78,7 @@ public class HttpServer extends AbstractVerticle {
 			}
 			
 			//Send response
-			log(res.encodePrettily());
+			log("\n" + res.encodePrettily());
 			final String origin = routingContext.request().getHeader("Origin");
 			response.putHeader("Access-Control-Allow-Origin", origin)
 					.setStatusCode(200)
@@ -122,7 +122,7 @@ public class HttpServer extends AbstractVerticle {
 		JsonObject allData = new JsonObject();
 		allData.put("light", rs.getPeripherals().getLed().toString());
 		allData.put("degrees", rs.getPeripherals().getServo());
-		allData.put("master", "rs.getMaster()");
+		allData.put("master", rs.getMaster().toString());
 		
 		//Send response
 		HttpServerResponse response = routingContext.response();
