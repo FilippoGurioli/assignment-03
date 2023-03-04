@@ -60,6 +60,7 @@ public class SerialPortCommunicator {
 				});
 				data = data.replace("DASH", "");
 				if (!stream) {
+					System.out.println(data);
 					if (data.equals("ON")) {
 						caller.updatePeripheral(Led.ON);
 						data = "";
@@ -68,6 +69,7 @@ public class SerialPortCommunicator {
 						data = "";
 					} else if (data.contains("BT:")) {
 						caller.btcHandler(data.replace("BT:", ""));
+						data = "";
 					} else {
 						try {
 							caller.updatePeripheral(Integer.parseInt(data));
