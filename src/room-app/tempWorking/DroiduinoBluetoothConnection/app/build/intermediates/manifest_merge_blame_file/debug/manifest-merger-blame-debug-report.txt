@@ -1,0 +1,61 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.droiduino.bluetoothconn"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="19"
+8-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="29" />
+9-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml
+10
+11    <!-- Permissions for Bluetooth access -->
+12    <uses-permission android:name="android.permission.BLUETOOTH" />
+12-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:7:5-68
+12-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:7:22-65
+13    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+13-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:8:5-74
+13-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:8:22-71
+14    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+14-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:9:5-79
+14-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:9:22-76
+15
+16    <application
+16-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:11:5-29:19
+17        android:allowBackup="true"
+17-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:12:9-35
+18        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+18-->[androidx.core:core:1.5.0] C:\Users\tommy\.gradle\caches\transforms-3\e9bedd415c12506ddfd773ed889a25e2\transformed\core-1.5.0\AndroidManifest.xml:24:18-86
+19        android:debuggable="true"
+20        android:icon="@mipmap/ic_launcher"
+20-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:13:9-43
+21        android:label="@string/app_name"
+21-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:14:9-41
+22        android:roundIcon="@mipmap/ic_launcher_round"
+22-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:15:9-54
+23        android:supportsRtl="true"
+23-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:16:9-35
+24        android:testOnly="true"
+25        android:theme="@style/AppTheme" >
+25-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:17:9-40
+26        <activity android:name="com.droiduino.bluetoothconn.SelectDeviceActivity" />
+26-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:18:9-67
+26-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:18:19-55
+27        <activity android:name="com.droiduino.bluetoothconn.MainActivity" >
+27-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:19:9-25:20
+27-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:19:19-47
+28            <intent-filter>
+28-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:20:13-24:29
+29                <action android:name="android.intent.action.MAIN" />
+29-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:21:17-69
+29-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:21:25-66
+30
+31                <category android:name="android.intent.category.LAUNCHER" />
+31-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:23:17-77
+31-->C:\Users\tommy\Downloads\assignment-03-091459dae32455ada0ba6b11f927560ea9dd20f5\src\room-app\DroiduinoBluetoothConnection\app\src\main\AndroidManifest.xml:23:27-74
+32            </intent-filter>
+33        </activity>
+34    </application>
+35
+36</manifest>
