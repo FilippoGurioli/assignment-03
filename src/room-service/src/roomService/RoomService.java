@@ -21,7 +21,7 @@ public class RoomService {
 	
 	private LinkedList<Data> valuesHistory = new LinkedList<>();
 	private boolean btPrivilege = false;
-	private boolean dashPrivilege = true;
+	private boolean dashPrivilege = false;
 	
 	public RoomService() throws Exception {
 		time.start();
@@ -141,4 +141,5 @@ public class RoomService {
 	private void log(final String msg) {
 		System.out.println("[ROOM SERVICE] " + msg);
 	}
+
 }

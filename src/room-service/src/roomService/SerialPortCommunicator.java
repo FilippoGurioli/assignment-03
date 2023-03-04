@@ -66,8 +66,8 @@ public class SerialPortCommunicator {
 					} else if (data.equals("OFF")) {
 						caller.updatePeripheral(Led.OFF);
 						data = "";
-					} else if (data.equals("BT")) {
-						caller.changePrivilegeOf(Master.BT);
+					} else if (data.contains("BT:")) {
+						//caller.btcHandler(data.replace("BT:", ""));
 					} else {
 						try {
 							caller.updatePeripheral(Integer.parseInt(data));
