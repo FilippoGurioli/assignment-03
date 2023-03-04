@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public static ConnectedThread connectedThread;
     public static CreateConnectThread createConnectThread;
 
+    boolean toggleUI = true;
     private final static int CONNECTING_STATUS = 1; // used in bluetooth handler to identify message status
     private final static int MESSAGE_READ = 2; // used in bluetooth handler to identify message update
 
@@ -125,6 +126,13 @@ public class MainActivity extends AppCompatActivity {
                             imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
                             textViewInfo.setText("Arduino Message : " + arduinoMsg);
                             switchToggle.setChecked(false);
+                        } else if (arduinoMsg.equals("DASH")){
+                            toggleUI = !toggleUI;
+                            switchToggle.setEnabled(toggleUI);
+                            main_slider.setEnabled(toggleUI);
+                            textViewBlinds.setEnabled(toggleUI);
+                            textViewInfo.setText(toggleUI ? "Hai il controllo" : "Il Manager ha il controllo");
+
                         } else {
                             main_slider.setValue(Integer.parseInt(arduinoMsg));
                             textViewInfo.setText("Arduino Message - Servo: " + arduinoMsg);
