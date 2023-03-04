@@ -101,6 +101,9 @@ function updateCurrentState(){
     axios.get('http://localhost:8080/api/currentData').then(response => {
         let data = response.data;
         btnLights.value = data["light"];
+        if (data["light"].equale("ON")) {
+            btnLights.style.backgroundImage = "linear-gradient(to bottom right, #22c1c3, #fdbb2d)";
+        }
         rngBlinds.value = data["degrees"];
         let master = data["master"];
         if (master == "DASH") {
