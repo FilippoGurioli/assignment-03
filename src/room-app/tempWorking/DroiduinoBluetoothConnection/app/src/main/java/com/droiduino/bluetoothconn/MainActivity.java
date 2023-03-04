@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
                         switch(msg.arg1){
                             case 1:
                                 toolbar.setSubtitle("Connected to " + deviceName);
+                                connectedThread.write("UPDATE");
                                 progressBar.setVisibility(View.GONE);
                                 buttonConnect.setEnabled(true);
                                 switchToggle.setEnabled(true);
@@ -125,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                             textViewInfo.setText("Arduino Message : " + arduinoMsg);
                             switchToggle.setChecked(false);
                         } else {
+                            main_slider.setValue(Integer.parseInt(arduinoMsg));
                             textViewInfo.setText("Arduino Message - Servo: " + arduinoMsg);
                         }
                 }
