@@ -104,12 +104,14 @@ function updateCurrentState(){
         rngBlinds.value = data["degrees"];
         let master = data["master"];
         if (master == "DASH") {
-            auto = "false";
-            btnAuto.style.backgroundColor = "rgb(20, 20, 20)";
+            auto = false;
+            btnAuto.style.border = "4px solid transparent";
+            btnAuto.style.boxShadow = "0px 0px 20px rgba(255, 255, 255, 0.2)";
             btnAuto.addEventListener("click", btnAuto.func=(ev)=>noAutoMode(ev));
         } else {
-            auto = "true";
-            btnAuto.style.backgroundColor = "grey";
+            auto = true;
+            btnAuto.style.border = "4px solid #22c1c3";
+            btnAuto.style.boxShadow = "0px 0px 20px transparent";
             btnAuto.addEventListener("click", btnAuto.func=(ev)=>autoMode(ev));
         }
         document.querySelector("div p").innerHTML = rngBlinds.value;
@@ -118,18 +120,20 @@ function updateCurrentState(){
 
 function enableAuto(){
     askPriority();
+    btnAuto.style.border = "4px solid #22c1c3";
+    btnAuto.style.boxShadow = "0px 0px 20px transparent";
+    auto = true;
     btnAuto.removeEventListener("click", btnAuto.func);
     btnAuto.addEventListener("click", btnAuto.func=(ev)=>autoMode(ev));
-    btnAuto.style.backgroundColor = "grey";
-    auto = true;
 }
 
 function disableAuto(){
     askPriority();
+    btnAuto.style.border = "4px solid transparent";
+    btnAuto.style.boxShadow = "0px 0px 20px rgba(255, 255, 255, 0.2)";
+    auto = false;
     btnAuto.removeEventListener("click", btnAuto.func);
     btnAuto.addEventListener("click", btnAuto.func=(ev)=>noAutoMode(ev));
-    btnAuto.style.backgroundColor = "rgb(20, 20, 20)";
-    auto = false;
 }
 
 function askPriority(){
