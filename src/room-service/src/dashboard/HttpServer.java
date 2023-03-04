@@ -78,7 +78,7 @@ public class HttpServer extends AbstractVerticle {
 			}
 			
 			//Send response
-			log(res.encodePrettily());
+			log("\n" + res.encodePrettily());
 			final String origin = routingContext.request().getHeader("Origin");
 			response.putHeader("Access-Control-Allow-Origin", origin)
 					.setStatusCode(200)
