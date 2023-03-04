@@ -6,8 +6,6 @@ let btnHistory = document.getElementById("btnHistory");
 let auto = true;
 
 //Setup
-btnAuto.style.backgroundColor = "grey";
-btnAuto.addEventListener("click", btnAuto.func=(ev)=>autoMode(ev));
 updateCurrentState();
 
 //Controls' event listeners
@@ -38,7 +36,6 @@ rngBlinds.addEventListener("change", function(event){
 
 function autoMode(event){
     event.preventDefault();
-    alert("auto mode on");
 }
 
 function noAutoMode(event){
@@ -108,8 +105,12 @@ function updateCurrentState(){
         let master = data["master"];
         if (master == "DASH") {
             auto = "false";
+            btnAuto.style.backgroundColor = "rgb(20, 20, 20)";
+            btnAuto.addEventListener("click", btnAuto.func=(ev)=>noAutoMode(ev));
         } else {
             auto = "true";
+            btnAuto.style.backgroundColor = "grey";
+            btnAuto.addEventListener("click", btnAuto.func=(ev)=>autoMode(ev));
         }
         document.querySelector("div p").innerHTML = rngBlinds.value;
     });

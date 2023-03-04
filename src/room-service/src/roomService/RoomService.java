@@ -47,6 +47,7 @@ public class RoomService {
 					this.executeCommand(Led.OFF);
 				}
 			} else {
+				printStatus();
 				Thread.sleep(WAITING_TIME);
 			}
 		}
@@ -147,8 +148,7 @@ public class RoomService {
 	private void printStatus() {
 		log("----- STATUS -----");
 		log("Time: " + time);
-		log("BTMaster: " + btPrivilege);
-		log("DASHMaster: " + dashPrivilege);
+		log("Master: " + getMaster());
 		log(this.p.toString());
 		log("------------------");
 	}
