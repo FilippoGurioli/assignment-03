@@ -4,21 +4,7 @@
     header("Access-Control-Allow-Origin: http://localhost:80/assignment-03/room-dashboard/Functioning%20Test/Smarthome-Dashboard.php");
 
     $currentValues["light"] = "OFF";
-    $currentValues["blinds"] = "0";
-
-    $entityBody = file_get_contents('php://input');
-    //var_dump($entityBody);
-
-    if (isset($_POST["lightVal"])) {
-        $currentValues["light"] = $_POST["lightVal"];
-        echo "ciao";
-        //header("HTTP/1.1 200 OK");
-    }
-    if (isset($_POST["blindsVal"])) {
-        $currentValues["blinds"] = $_POST["blindsVal"];
-        //header("HTTP/1.1 200 OK");
-        var_dump($_POST);
-    }
+    $currentValues["blinds"] = "180";
 ?>
 
 <!DOCTYPE html>
