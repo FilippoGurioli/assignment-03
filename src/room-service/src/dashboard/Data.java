@@ -1,13 +1,18 @@
 package dashboard;
 
-class Data {
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+public class Data {
 	private String date;
 	private String time;
 	private String content;
 	
-	public Data(String date, String time, String content) {
-		this.date = date;
-		this.time = time;
+	public Data(String content) {
+		SimpleDateFormat formatter = new SimpleDateFormat("dd/MM");
+		this.date = formatter.format(new Date());
+		formatter = new SimpleDateFormat("HH:mm:ss");
+		this.time = formatter.format(new Date());
 		this.content = content;
 	}
 	

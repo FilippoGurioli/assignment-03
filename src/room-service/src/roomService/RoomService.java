@@ -1,5 +1,8 @@
 package roomService;
 
+import java.util.LinkedList;
+
+import dashboard.Data;
 import dashboard.HttpServer;
 import io.vertx.core.Vertx;
 
@@ -8,13 +11,17 @@ import io.vertx.core.Vertx;
  */
 public class RoomService {
 	
+	private final static int WAITING_TIME = 1000;
+	private static final int MAX_HISTORY_SIZE = 10;
+	
 	private final TimeThread time = new TimeThread();
 	private final Peripherals p = new Peripherals();
 	private final SerialPortCommunicator serialComm = new SerialPortCommunicator(this);
 	private final HttpServer httpServer = new HttpServer(this);
-	private final static int WAITING_TIME = 1000;
+	
+	private LinkedList<Data> valuesHistory = new LinkedList<>();
 	private boolean btPrivilege = false;
-	private boolean dashPrivilege = false;
+	private boolean dashPrivilege = true;
 	
 	public RoomService() throws Exception {
 		time.start();
@@ -24,6 +31,7 @@ public class RoomService {
 		vertx.deployVerticle(httpServer);
 		
 		while (true) {
+			Thread.sleep(WAITING_TIME*3);
 			if (!btPrivilege && !dashPrivilege) {
 				this.printStatus();
 				//-----------------------SERVO AUTO-HANDLING------------------
@@ -80,6 +88,17 @@ public class RoomService {
 			dashPrivilege = !dashPrivilege;
 			break;
 		}
+	}
+	
+	public void addToHistory(Data newData) {
+		valuesHistory.addFirst(newData);
+		if (valuesHistory.size() > MAX_HISTORY_SIZE) {
+			valuesHistory.removeLast();
+		}
+	}
+	
+	public LinkedList<Data> getHistory() {
+		return valuesHistory;
 	}
 	
 	private void printStatus() {

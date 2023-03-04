@@ -10,27 +10,15 @@ import io.vertx.ext.web.handler.BodyHandler;
 import roomService.Led;
 import roomService.RoomService;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.LinkedList;
-
 /*
  * Data Service as a vertx event-loop 
  */
 public class HttpServer extends AbstractVerticle {
 	
 	private static final int PORT = 8080;
-	private static final int MAX_SIZE = 10;
-	private LinkedList<Data> values;
 	private final RoomService rs;
 	
-	private String light = "OFF";
-	private int degrees = 0;
-	private boolean presence = false;
-	private boolean brightness = false;
-	
 	public HttpServer(RoomService rs) {
-		this.values = new LinkedList<>();
 		this.rs = rs;
 	}
 
@@ -38,10 +26,10 @@ public class HttpServer extends AbstractVerticle {
 	public void start() {		
 		Router router = Router.router(vertx);
 		router.route().handler(BodyHandler.create());
-		router.post("/api/data").handler(this::handleAddNewData);
-		router.post("/api/ESPdata").handler(this::handleESPData);
-		router.get("/api/data").handler(this::handleGetData);
-		router.get("/api/currentData").handler(this::handleGetCurrentData);
+		router.post("/api/data").handler(this::handlePostNewData);
+		router.post("/api/ESPdata").handler(this::handlePostESPData);
+		router.get("/api/data").handler(this::handleGetHistory);
+		router.get("/api/currentData").handler(this::handleGetControls);
 		vertx
 			.createHttpServer()
 			.requestHandler(router)
@@ -49,37 +37,33 @@ public class HttpServer extends AbstractVerticle {
 		log("Service ready on port: " + PORT);
 	}
 	
-	private void handleAddNewData(RoutingContext routingContext) {
+	private void handlePostNewData(RoutingContext routingContext) {
 		HttpServerResponse response = routingContext.response();
 		JsonObject res = routingContext.getBodyAsJson();
 		if (res == null) {
 			sendError(400, response);
 		} else {
-			//Add POST's record to list
-			SimpleDateFormat formatter = new SimpleDateFormat("dd/MM");
-			String date = formatter.format(new Date());
+			//Forms data content
 			String content = "";
 			if (res.getString("type").equals("light")) {
 				content = "Luci: " + res.getString("value");
-				light = res.getString("value"); //Update lights value
+				//Update lights value
+				if (res.getString("value").equals("ON")) {
+					rs.executeCommand(Led.ON);
+				}
+				if (res.getString("value").equals("OFF")) {
+					rs.executeCommand(Led.OFF);
+				}
 			}
 			if (res.getString("type").equals("blind")) {
 				content = "Tende: " + res.getString("value") + "%";
-				degrees = Integer.parseInt(res.getString("value")); //Update blinds value
+				rs.executeCommand(Integer.parseInt(res.getString("value"))); //Update blinds value
 			}
-			if (light.equals("ON")) {
-				rs.executeCommand(Led.ON);
-			}
-			if (light.equals("OFF")) {
-				rs.executeCommand(Led.OFF);
-			}
-			rs.executeCommand(degrees);
-			formatter = new SimpleDateFormat("HH:mm:ss");
-			String time = formatter.format(new Date());
 			
-			values.addFirst(new Data(date, time, content));
-			if (values.size() > MAX_SIZE) {
-				values.removeLast();
+			//Add POST's record to history list
+			if(!content.equals("")) {
+				Data newData = new Data(content);
+				rs.addToHistory(newData);	
 			}
 			
 			//Send response
@@ -91,15 +75,17 @@ public class HttpServer extends AbstractVerticle {
 		}
 	}
 	
-	private void handleGetData(RoutingContext routingContext) {
+	private void handleGetHistory(RoutingContext routingContext) {
 		//Build response
 		JsonArray arr = new JsonArray();
-		for (Data data : values) {
-			JsonObject allData = new JsonObject();
-			allData.put("Date", data.getDate());
-			allData.put("Time", data.getTime());
-			allData.put("Content", data.getContent());
-			arr.add(allData);
+		if (!rs.getHistory().isEmpty()) {
+			for (Data data : rs.getHistory()) {
+				JsonObject allData = new JsonObject();
+				allData.put("Date", data.getDate());
+				allData.put("Time", data.getTime());
+				allData.put("Content", data.getContent());
+				arr.add(allData);
+			}
 		}
 		
 		//Send response
@@ -110,11 +96,11 @@ public class HttpServer extends AbstractVerticle {
 				.end(arr.encodePrettily());
 	}
 	
-	private void handleGetCurrentData(RoutingContext routingContext) {
+	private void handleGetControls(RoutingContext routingContext) {
 		//Build response
 		JsonObject allData = new JsonObject();
-		allData.put("light", light);
-		allData.put("degrees", degrees);
+		allData.put("light", rs.getPeripherals().getLed().toString());
+		allData.put("degrees", rs.getPeripherals().getServo());
 		
 		//Send response
 		HttpServerResponse response = routingContext.response();
@@ -124,17 +110,17 @@ public class HttpServer extends AbstractVerticle {
 				.end(allData.encodePrettily());
 	}
 	
-	private void handleESPData(RoutingContext routingContext) {
+	private void handlePostESPData(RoutingContext routingContext) {
 		HttpServerResponse response = routingContext.response();
 		JsonObject res = routingContext.getBodyAsJson();
 		if (res == null) {
 			sendError(400, response);
 		} else {
 			//Update presence and darkness values;
-			presence = res.getBoolean("presence");
-			brightness = res.getBoolean("brightness");
+			rs.getPeripherals().setPresence(res.getBoolean("presence"));
+			rs.getPeripherals().setBrightness(res.getBoolean("brightness"));
 			
-			log("Presence: " + presence + " - Brightness: " + brightness);
+			log("Presence: " + rs.getPeripherals().isPresent() + " - Brightness: " + rs.getPeripherals().isBright());
 
 			//Send response
 			final String origin = routingContext.request().getHeader("Origin");

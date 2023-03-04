@@ -23,6 +23,9 @@ public class SerialPortCommunicator {
 		for (var port : SerialPort.getCommPorts()) {
 			if (port.toString().contains("Arduino Uno")) {
 				comPort = port;
+				break;
+			} else if (port.toString().contains("Dispositivo seriale USB")) {
+				comPort = port;
 			}
 		}
 		if (comPort == null) {

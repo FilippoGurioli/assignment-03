@@ -64,7 +64,7 @@ public class Peripherals {
 	}
 	
 	public String toString() {
-		return "Presence: " + this.presence + " Bright: " + this.brightness + "\n"
-				+ "Servo: " + this.servo + "  LED: " + this.led;
+		return "Presence: " + this.presence + " Bright: " + this.brightness
+				+ " Servo: " + this.servo + "  LED: " + this.led;
 	}
 }

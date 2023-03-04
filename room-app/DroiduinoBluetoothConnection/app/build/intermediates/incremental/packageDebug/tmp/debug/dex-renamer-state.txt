@@ -1,4 +1,0 @@
-#Fri Mar 03 22:47:25 CET 2023
-base.0=C\:\\Users\\tommy\\Documents\\GitHub\\assignment-03\\room-app\\DroiduinoBluetoothConnection\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
-renamed.0=classes.dex
-path.0=classes.dex
