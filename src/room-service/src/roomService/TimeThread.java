@@ -3,6 +3,9 @@ package roomService;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Thread that handles the day/night cycle.
+ */
 public class TimeThread extends Thread {
 
 	private boolean morning = false;

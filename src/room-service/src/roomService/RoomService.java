@@ -52,23 +52,43 @@ public class RoomService {
 		}
 	}
 	
+	/**
+	 * Orders to switch on/off the lights in Arduino.
+	 * 
+	 * @param servo The new lights value.
+	 */
 	public void executeCommand(final Led light) {
 		if (!light.equals(this.p.getLed())) {
 			this.serialComm.send(light.toString());
 		}
 	}
 	
+	/**
+	 * Orders to change the servo position in Arduino.
+	 * 
+	 * @param servo The new servo value.
+	 */
 	public void executeCommand(final int servo) {
 		if (servo != this.p.getServo()) {
 			this.serialComm.send(String.valueOf(servo));
 		}
 	}
 	
+	/**
+	 * Updates the servo value in class Peripherals.
+	 * 
+	 * @param servo The new servo value.
+	 */
 	public void updatePeripheral(final int servo) {
 		this.p.setServo(servo);
 		log("Servo set at " + this.p.getServo());
 	}
 	
+	/**
+	 * Updates the lights value in class Peripherals.
+	 * 
+	 * @param light The new lights value.
+	 */
 	public void updatePeripheral(final Led light) {
 		this.p.setLed(light);
 		log("LED turned " + light);
@@ -78,6 +98,11 @@ public class RoomService {
 		return this.p;
 	}
 	
+	/**
+	 * Changes the privileges to modify the state of the room of Android and dashboard applications.
+	 * 
+	 * @param master The privilege to swap.
+	 */
 	public void changePrivilegeOf(final Master master) {
 		switch(master) {
 		case BT:
@@ -90,6 +115,11 @@ public class RoomService {
 		}
 	}
 	
+	/**
+	 * Adds a new data entry in the history list. History list contains at most {@link MAX_HISTORY_SIZE} data records.
+	 * 
+	 * @param newData The new data to add.
+	 */
 	public void addToHistory(Data newData) {
 		valuesHistory.addFirst(newData);
 		if (valuesHistory.size() > MAX_HISTORY_SIZE) {

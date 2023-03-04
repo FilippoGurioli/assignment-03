@@ -7,11 +7,14 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.BodyHandler;
+
 import roomService.Led;
 import roomService.RoomService;
 
-/*
- * Data Service as a vertx event-loop 
+/**
+ * An HTTP Server instance that handles HTTP requests from the dashboard HTTP client or ESP32, as a vertx event-loop.
+ * 
+ * @param rs Room-Service instance, used to update peripherals values.
  */
 public class HttpServer extends AbstractVerticle {
 	
@@ -23,7 +26,7 @@ public class HttpServer extends AbstractVerticle {
 	}
 
 	@Override
-	public void start() {		
+	public void start() {	
 		Router router = Router.router(vertx);
 		router.route().handler(BodyHandler.create());
 		router.post("/api/data").handler(this::handlePostNewData);
@@ -37,6 +40,10 @@ public class HttpServer extends AbstractVerticle {
 		log("Service ready on port: " + PORT);
 	}
 	
+	/**
+	 * Handles POST request from dashboard controls' page: sets new values for lights or blinds.
+	 * @param routingContext
+	 */
 	private void handlePostNewData(RoutingContext routingContext) {
 		HttpServerResponse response = routingContext.response();
 		JsonObject res = routingContext.getBodyAsJson();
@@ -75,6 +82,11 @@ public class HttpServer extends AbstractVerticle {
 		}
 	}
 	
+	/**
+	 * Handles GET request from dashboard history's page: sends back a JSON object with the last ten values executed in arduino.
+	 * 
+	 * @param routingContext
+	 */
 	private void handleGetHistory(RoutingContext routingContext) {
 		//Build response
 		JsonArray arr = new JsonArray();
@@ -96,6 +108,11 @@ public class HttpServer extends AbstractVerticle {
 				.end(arr.encodePrettily());
 	}
 	
+	/**
+	 * Handles GET request form dashboard controls' page: sends back the lights and blinds current values.
+	 * 
+	 * @param routingContext
+	 */
 	private void handleGetControls(RoutingContext routingContext) {
 		//Build response
 		JsonObject allData = new JsonObject();
@@ -110,6 +127,11 @@ public class HttpServer extends AbstractVerticle {
 				.end(allData.encodePrettily());
 	}
 	
+	/**
+	 * Handles POST request from ESP: sets presence and brightness values in peripherals.
+	 * 
+	 * @param routingContext
+	 */
 	private void handlePostESPData(RoutingContext routingContext) {
 		HttpServerResponse response = routingContext.response();
 		JsonObject res = routingContext.getBodyAsJson();

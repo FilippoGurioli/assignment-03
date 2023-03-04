@@ -1,5 +1,8 @@
 package roomService;
 
+/**
+ * Contains all the peripherals values and getter/setter methods.
+ */
 public class Peripherals {
 
 	private int servo;
@@ -8,7 +11,7 @@ public class Peripherals {
 	private boolean brightness;
 	public static final int MAX_DEG = 180;
 	public static final int MIN_DEG = 0;
-	
+
 	public Peripherals(final int servo, final Led led, final boolean presence, final boolean brightness) {
 		if (servo > MAX_DEG) {
 			this.servo = MAX_DEG;

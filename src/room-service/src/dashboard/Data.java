@@ -3,6 +3,9 @@ package dashboard;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Data object for lights/blinds data storing.
+ */
 public class Data {
 	private String date;
 	private String time;

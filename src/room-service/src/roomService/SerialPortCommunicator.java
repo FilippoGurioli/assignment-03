@@ -6,6 +6,9 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
+/**
+ * Handles the serial communication with Arduino.
+ */
 public class SerialPortCommunicator {
 
 	/*
@@ -84,6 +87,11 @@ public class SerialPortCommunicator {
 		});
 	}
 
+	/**
+	 * Sends msg via serial communication port.
+	 * 
+	 * @param msg The message to send.
+	 */
 	public void send(final String msg) {
 		final String prtMsg = msg + "\n";
 		log("Send: " + msg);
