@@ -65,7 +65,6 @@ public class SerialPortCommunicator {
 				});
 				data = data.replace("DASH", "");
 				if (!stream) {
-					System.out.println("DATA: " + data);
 					if (data.equals("ON")) {
 						caller.updatePeripheral(Led.ON);
 					} else if (data.equals("OFF")) {
