@@ -18,6 +18,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -59,11 +60,13 @@ public class MainActivity extends AppCompatActivity {
         progressBar.setVisibility(View.GONE);
         final TextView textViewInfo = findViewById(R.id.textViewInfo);
         final Switch switchToggle = findViewById(R.id.switch1);
+        final CheckBox priorityCheck = findViewById(R.id.checkBox);
         final Slider main_slider = findViewById(R.id.main_slider);
         final TextView textViewBlinds = findViewById(R.id.textViewBlinds);
         textViewBlinds.setEnabled(false);
         main_slider.setEnabled(false);
         switchToggle.setEnabled(false);
+        priorityCheck.setEnabled(false);
         switchToggle.setText(switchToggle.getTextOff());
         final ImageView imageView = findViewById(R.id.imageView);
         imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
@@ -106,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                                 switchToggle.setEnabled(true);
                                 main_slider.setEnabled(true);
                                 textViewBlinds.setEnabled(true);
+                                priorityCheck.setEnabled(true);
                                 break;
                             case -1:
                                 toolbar.setSubtitle("Device fails to connect");
@@ -132,6 +136,10 @@ public class MainActivity extends AppCompatActivity {
                             toggleUI = !toggleUI;
                             switchToggle.setEnabled(toggleUI);
                             main_slider.setEnabled(toggleUI);
+                            priorityCheck.setEnabled(toggleUI);
+                            isChangeUser = false;
+                            priorityCheck.setChecked(false );
+                            isChangeUser = true;
                             textViewBlinds.setEnabled(toggleUI);
                             textViewInfo.setText(toggleUI ? "Hai il controllo" : "Il Manager ha il controllo");
                         } else {
@@ -157,6 +165,15 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     });
+
+    // Checkbox for control priority
+        priorityCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+                first = !first;
+                connectedThread.write("BT\n");
+            }
+        });
 
     // Slider for blinds control
         main_slider.addOnChangeListener(new Slider.OnChangeListener() {

@@ -24,18 +24,35 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="200dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="118dp"
+        android:layout_height="146dp"
+        android:layout_marginTop="184dp"
+        android:layout_marginEnd="32dp"
         android:background="@color/colorOff"
         android:contentDescription="Visual LED"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintStart_toEndOf="@+id/switch1"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_bulb_light"
         tools:ignore="VectorDrawableCompat" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="108dp"
+        android:layout_height="57dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="232dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:text="Switch"
+        android:textOff="Luci spente"
+        android:textOn="Luci accese"
+        app:layout_constraintBottom_toTopOf="@+id/textViewBlinds"
+        app:layout_constraintEnd_toStartOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/buttonConnect"
@@ -66,65 +83,64 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:textAlignment="center"
         android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/main_slider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch1"
-        app:layout_constraintVertical_bias="0.561" />
-
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="108dp"
-        android:layout_height="57dp"
-        android:layout_marginStart="151dp"
-        android:layout_marginTop="51dp"
-        android:layout_marginEnd="152dp"
-        android:layout_marginBottom="32dp"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        android:text="Switch"
-        android:textOn="Luci accese"
-        android:textOff="Luci spente"
-        app:layout_constraintBottom_toTopOf="@+id/textViewInfo"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+        app:layout_constraintTop_toBottomOf="@+id/main_slider"
+        app:layout_constraintVertical_bias="0.707" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/main_slider"
         android:layout_width="281dp"
         android:layout_height="78dp"
-        android:layout_marginTop="72dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="120dp"
+        android:contentDescription="Apertura tende"
+        android:hint="eg 8"
         android:stepSize="30"
         android:valueFrom="0"
         android:valueTo="180"
-        android:contentDescription="Apertura tende"
-        android:hint="eg 8"
-        app:layout_constraintBottom_toTopOf="@+id/buttonToggle"
+        app:layout_constraintBottom_toTopOf="@+id/textViewInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/switch1"
-        app:layout_constraintVertical_bias="0.65999997" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewBlinds" />
 
     <TextView
         android:id="@+id/textViewBlinds"
         android:layout_width="198dp"
         android:layout_height="58dp"
         android:layout_marginStart="106dp"
+        android:layout_marginTop="140dp"
         android:layout_marginEnd="107dp"
-        android:layout_marginBottom="45dp"
         android:text="Apertura tende"
         android:textAlignment="center"
         android:textSize="22sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/main_slider"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/main_slider" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="97dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="277dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="76dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:text="Controllo manuale"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:layout_constraintVertical_bias="1.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
