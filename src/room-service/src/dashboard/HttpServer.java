@@ -146,8 +146,6 @@ public class HttpServer extends AbstractVerticle {
 			//Update presence and darkness values;
 			rs.getPeripherals().setPresence(res.getBoolean("presence"));
 			rs.getPeripherals().setBrightness(res.getBoolean("brightness"));
-			
-			log("Presence: " + rs.getPeripherals().isPresent() + " - Brightness: " + rs.getPeripherals().isBright());
 
 			//Send response
 			final String origin = routingContext.request().getHeader("Origin");

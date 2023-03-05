@@ -15,5 +15,5 @@ double LightSensorImpl::getLightIntensity(){
 
 bool LightSensorImpl::isBright(){
   getLightIntensity();
-  return lightIntensity >= 1.5;
+  return (lightIntensity >= 1.5);
 }
