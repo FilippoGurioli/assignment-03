@@ -77,8 +77,11 @@ public class RoomService {
 	 * @param servo The new servo value.
 	 */
 	public void updatePeripheral(final int servo) {
-		this.p.setServo(servo);
-		log("Servo set at " + this.p.getServo());
+		if (servo != this.p.getServo()) {
+			this.p.setServo(servo);
+			log("Servo set at " + this.p.getServo());
+			addToHistory(new Data(String.valueOf(this.p.getServo())));
+		}
 	}
 	
 	/**
@@ -87,8 +90,11 @@ public class RoomService {
 	 * @param light The new lights value.
 	 */
 	public void updatePeripheral(final Led light) {
-		this.p.setLed(light);
-		log("LED turned " + light);
+		if (!light.equals(this.p.getLed())) {
+			this.p.setLed(light);
+			log("LED turned " + light);
+			addToHistory(new Data(light.toString()));
+		}
 	}
 	
 	public Peripherals getPeripherals() {

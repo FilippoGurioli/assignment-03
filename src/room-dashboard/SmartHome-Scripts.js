@@ -142,3 +142,6 @@ function disableAuto(){
 function askPriority(){
     sendUpdate("master", null);
 }
+
+//Interval polling
+setInterval(updateCurrentState(), 2000);
