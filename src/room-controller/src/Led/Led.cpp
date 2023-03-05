@@ -6,6 +6,10 @@ Led::Led(int pin){
   pinMode(pin,OUTPUT);
 }
 
+bool Led::isOn() {
+  return digitalRead(pin);
+}
+
 void Led::switchOn(){
   digitalWrite(pin,HIGH);
 }

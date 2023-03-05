@@ -42,7 +42,8 @@ public class MainActivity extends AppCompatActivity {
     public static BluetoothSocket mmSocket;
     public static ConnectedThread connectedThread;
     public static CreateConnectThread createConnectThread;
-
+    public boolean isChangeUser = true;
+    public boolean first = true;
     boolean toggleUI = true;
     private final static int CONNECTING_STATUS = 1; // used in bluetooth handler to identify message status
     private final static int MESSAGE_READ = 2; // used in bluetooth handler to identify message update
@@ -100,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
                         switch(msg.arg1){
                             case 1:
                                 toolbar.setSubtitle("Connected to " + deviceName);
-                                connectedThread.write("UPDATE\n");
                                 progressBar.setVisibility(View.GONE);
                                 buttonConnect.setEnabled(true);
                                 switchToggle.setEnabled(true);
@@ -114,28 +114,35 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                         }
                         break;
-//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!QUI PER MODIFICARE ARDUINO->ANDROID!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     case MESSAGE_READ:
                         String arduinoMsg = msg.obj.toString(); // Read message from Arduino
-                        arduinoMsg = arduinoMsg.replaceAll("[^a-zA-Z0-9_-]", "");
                         if (arduinoMsg.equals("ON")) {
                             imageView.setBackgroundColor(getResources().getColor(R.color.colorOn));
                             textViewInfo.setText("Arduino Message : " + arduinoMsg);
+                            isChangeUser = false;
                             switchToggle.setChecked(true);
+                            isChangeUser = true;
                         } else if (arduinoMsg.equals("OFF")) {
                             imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
                             textViewInfo.setText("Arduino Message : " + arduinoMsg);
+                            isChangeUser = false;
                             switchToggle.setChecked(false);
-                        } else if (arduinoMsg.equals("DASH")){
+                            isChangeUser = true;
+                        } else if (arduinoMsg.equals("DASH")) {
                             toggleUI = !toggleUI;
                             switchToggle.setEnabled(toggleUI);
                             main_slider.setEnabled(toggleUI);
                             textViewBlinds.setEnabled(toggleUI);
                             textViewInfo.setText(toggleUI ? "Hai il controllo" : "Il Manager ha il controllo");
-
                         } else {
-                            main_slider.setValue(Integer.parseInt(arduinoMsg));
-                            textViewInfo.setText("Arduino Message - Servo: " + arduinoMsg);
+                            try {
+                                isChangeUser = false;
+                                main_slider.setValue(Integer.parseInt(arduinoMsg));
+                                isChangeUser = true;
+                                textViewInfo.setText("Arduino Message - Servo: " + arduinoMsg);
+                            } catch (NumberFormatException e) {
+                                Log.e("Trash message", arduinoMsg);
+                            }
                         }
                 }
             }
@@ -156,7 +163,13 @@ public class MainActivity extends AppCompatActivity {
         @SuppressLint("RestrictedApi")
         @Override
         public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-            connectedThread.write(String.valueOf(value) + "\n");
+            if (isChangeUser) {
+                if (first) {
+                    connectedThread.write("BT\n");
+                    first = false;
+                }
+                connectedThread.write(String.valueOf((int)value) + "\n");
+            }
         }
     });
 
@@ -164,19 +177,24 @@ public class MainActivity extends AppCompatActivity {
         switchToggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            String cmdText = null;
-
-            if (isChecked) {
-                switchToggle.setText(switchToggle.getTextOn());
-                // Command to turn on LED on Arduino. Must match with the command in Arduino code
-                cmdText = "ON\n";
-            } else {
-                switchToggle.setText(switchToggle.getTextOff());
-                // Command to turn off LED on Arduino. Must match with the command in Arduino code
-                cmdText = "OFF\n";
+            if(isChangeUser) {
+                String cmdText = null;
+                if (first) {
+                    connectedThread.write("BT\n");
+                    first = false;
+                }
+                if (isChecked) {
+                    switchToggle.setText(switchToggle.getTextOn());
+                    // Command to turn on LED on Arduino. Must match with the command in Arduino code
+                    cmdText = "ON\n";
+                } else {
+                    switchToggle.setText(switchToggle.getTextOff());
+                    // Command to turn off LED on Arduino. Must match with the command in Arduino code
+                    cmdText = "OFF\n";
+                }
+                // Send command to Arduino board
+                connectedThread.write(cmdText);
             }
-            // Send command to Arduino board
-            connectedThread.write(cmdText);
         }
     });
 }
@@ -282,8 +300,11 @@ public static class ConnectedThread extends Thread {
                 String readMessage;
                 if (buffer[bytes] == '\n'){
                     readMessage = new String(buffer,0,bytes);
-                    Log.e("Arduino Message",readMessage);
-                    handler.obtainMessage(MESSAGE_READ,readMessage).sendToTarget();
+                    readMessage = readMessage.replaceAll("[^a-zA-Z0-9_-]", "");
+                    Log.e("Arduino Message","\"" + readMessage + "\"");
+                    if (!readMessage.equals("")) {
+                        handler.obtainMessage(MESSAGE_READ,readMessage).sendToTarget();
+                    }
                     bytes = 0;
                 } else {
                     bytes++;

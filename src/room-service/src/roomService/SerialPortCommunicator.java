@@ -3,7 +3,7 @@ package roomService;
 import java.nio.charset.StandardCharsets;
 
 import com.fazecast.jSerialComm.SerialPort;
-import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortPacketListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
 /**
@@ -42,12 +42,17 @@ public class SerialPortCommunicator {
 			throw new Exception();
 		}
 		
-		comPort.addDataListener(new SerialPortDataListener() {
+		comPort.addDataListener(new SerialPortPacketListener() {
 		   @Override
 		   public int getListeningEvents() {
 			   return SerialPort.LISTENING_EVENT_DATA_RECEIVED;
 		   }
 
+		   @Override
+		   public int getPacketSize() {
+			   return 1;
+		   }
+		   
 		   @Override
 			public void serialEvent(final SerialPortEvent event) {
 				final String msg = new String(event.getReceivedData(), StandardCharsets.UTF_8);
@@ -60,27 +65,25 @@ public class SerialPortCommunicator {
 				});
 				data = data.replace("DASH", "");
 				if (!stream) {
-					System.out.println(data);
+					System.out.println("DATA: " + data);
 					if (data.equals("ON")) {
 						caller.updatePeripheral(Led.ON);
-						data = "";
 					} else if (data.equals("OFF")) {
 						caller.updatePeripheral(Led.OFF);
-						data = "";
-					} else if (data.contains("BT:")) {
-						caller.btcHandler(data.replace("BT:", ""));
-						data = "";
+					} else if (data.equals("BT")) {
+						caller.changePrivilegeOf(Master.BT);
 					} else {
 						try {
 							caller.updatePeripheral(Integer.parseInt(data));
-							data = "";
 						} catch (final NumberFormatException e) {
 							//if data isn't "ON" or "OFF" nor a value it should be a debugging message
 							System.out.print(msg.replace("/", ""));
 						}
 					}
+					data = "";
 				}
 			}
+
 		});
 	}
 

@@ -32,8 +32,8 @@ public class RoomService {
 		
 		while (true) {
 			Thread.sleep(WAITING_TIME*3);
+			this.printStatus();
 			if (this.getMaster() == Master.AUTO) {
-				this.printStatus();
 				//-----------------------SERVO AUTO-HANDLING------------------
 				if (time.isMorning() && this.p.isPresent() && this.p.getServo() == Peripherals.MAX_DEG) {
 					this.executeCommand(Peripherals.MIN_DEG);
@@ -47,7 +47,6 @@ public class RoomService {
 					this.executeCommand(Led.OFF);
 				}
 			} else {
-				printStatus();
 				Thread.sleep(WAITING_TIME);
 			}
 		}
@@ -131,16 +130,6 @@ public class RoomService {
 		valuesHistory.addFirst(newData);
 		if (valuesHistory.size() > MAX_HISTORY_SIZE) {
 			valuesHistory.removeLast();
-		}
-	}
-	
-	public void btcHandler(final String command) {
-		if (command.equals("UPDATE")) {
-			this.serialComm.send(this.p.getLed().toString());
-			this.serialComm.send(this.p.getServo() + "");
-			if (this.dashPrivilege) {
-				this.serialComm.send("DASH");
-			}
 		}
 	}
 	

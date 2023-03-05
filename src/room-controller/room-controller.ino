@@ -3,8 +3,7 @@
 #include "src/SerialPort/SerialPortImpl.h"
 #include "src/EventHandler.h"
 #include "src/BluetoothPort/BluetoothPortImpl.h"
-
-#include "src/lib/ServoTimer2/ServoTimer2.h"
+#include "src/RollerBlinds/RollerBlinds.h"
 
 #define SERIAL_IN_PIN 0
 #define SERVOPIN 5
@@ -17,9 +16,8 @@ void setup() {
   Led* led = new Led(LEDPIN);
   SerialPort* comPort = new SerialPortImpl(SERIAL_IN_PIN);
   BTPort* btPort = new BTPortImpl(BT_IN_PIN);
-  ServoTimer2 servo;
-  servo.attach(SERVOPIN);
-  eventHandler = new EventHandler(comPort, led, servo, btPort);
+  RollerBlinds* rb = new RollerBlinds(SERVOPIN);
+  eventHandler = new EventHandler(comPort, led, rb, btPort);
 }
 
 void loop() {
