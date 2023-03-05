@@ -48,6 +48,9 @@ btnControls.addEventListener("click", function(event){
     updateCurrentState();
     document.getElementById("controls").style.display = "flex";
     document.getElementById("state").style.display = "none";
+    while (true) {
+        setTimeout(updateCurrentState(), 1000);
+    }
 });
 
 btnHistory.addEventListener("click", function(event){
