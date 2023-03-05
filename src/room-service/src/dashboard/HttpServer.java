@@ -1,6 +1,7 @@
 package dashboard;
 
 import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
@@ -24,10 +25,12 @@ public class HttpServer extends AbstractVerticle {
 	
 	public HttpServer(RoomService rs) {
 		this.rs = rs;
+		Vertx vertx = Vertx.vertx();
+		vertx.deployVerticle(this);
 	}
 
 	@Override
-	public void start() {	
+	public void start() {
 		Router router = Router.router(vertx);
 		router.route().handler(BodyHandler.create());
 		router.post("/api/data").handler(this::handlePostNewData);
@@ -146,8 +149,6 @@ public class HttpServer extends AbstractVerticle {
 			//Update presence and darkness values;
 			rs.getPeripherals().setPresence(res.getBoolean("presence"));
 			rs.getPeripherals().setBrightness(res.getBoolean("brightness"));
-			
-			log("Presence: " + rs.getPeripherals().isPresent() + " - Brightness: " + rs.getPeripherals().isBright());
 
 			//Send response
 			final String origin = routingContext.request().getHeader("Origin");
@@ -162,7 +163,7 @@ public class HttpServer extends AbstractVerticle {
 	}
 
 	private void log(final String msg) {
-		System.out.println("[HTTP SERVER] "+msg);
+		System.out.println("[HTTP SERVER] " + msg);
 	}
 
 }

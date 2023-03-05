@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import dashboard.Data;
 import dashboard.HttpServer;
-import io.vertx.core.Vertx;
+import esp.MQTTServer;
 
 /**
  * Application main class, it contains the main logic of information exchanging between other subsystems.
@@ -17,7 +17,6 @@ public class RoomService {
 	private final TimeThread time = new TimeThread();
 	private final Peripherals p = new Peripherals();
 	private final SerialPortCommunicator serialComm = new SerialPortCommunicator(this);
-	private final HttpServer httpServer = new HttpServer(this);
 	
 	private LinkedList<Data> valuesHistory = new LinkedList<>();
 	private boolean btPrivilege = false;
@@ -25,10 +24,8 @@ public class RoomService {
 	
 	public RoomService() throws Exception {
 		time.start();
-		
-		//Starts the HTTP server
-		Vertx vertx = Vertx.vertx();
-		vertx.deployVerticle(httpServer);
+		new HttpServer(this);
+		new MQTTServer(this);
 		
 		while (true) {
 			Thread.sleep(WAITING_TIME*3);
