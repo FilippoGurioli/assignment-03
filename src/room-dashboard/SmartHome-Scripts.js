@@ -104,6 +104,9 @@ function updateCurrentState(){
         if (data["light"] == "ON") {
             btnLights.style.backgroundImage = "linear-gradient(to bottom right, #22c1c3, #fdbb2d)";
         }
+        if (data["light"] == "OFF") {
+            btnLights.style.backgroundImage = null;
+        }
         rngBlinds.value = data["degrees"];
         let master = data["master"];
         if (master == "DASH") {
@@ -144,4 +147,4 @@ function askPriority(){
 }
 
 //Interval polling
-setInterval(updateCurrentState(), 2000);
+setInterval(updateCurrentState, 1000);
