@@ -163,7 +163,7 @@ public class HttpServer extends AbstractVerticle {
 	}
 
 	private void log(final String msg) {
-		System.out.println("[HTTP SERVER] "+msg);
+		System.out.println("[HTTP SERVER] " + msg);
 	}
 
 }
