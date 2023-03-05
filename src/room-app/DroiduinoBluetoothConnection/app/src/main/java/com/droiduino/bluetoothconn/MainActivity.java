@@ -137,9 +137,7 @@ public class MainActivity extends AppCompatActivity {
                             switchToggle.setEnabled(toggleUI);
                             main_slider.setEnabled(toggleUI);
                             priorityCheck.setEnabled(toggleUI);
-                            isChangeUser = false;
-                            priorityCheck.setChecked(false );
-                            isChangeUser = true;
+                            priorityCheck.setChecked(false);
                             textViewBlinds.setEnabled(toggleUI);
                             textViewInfo.setText(toggleUI ? "Hai il controllo" : "Il Manager ha il controllo");
                         } else {
@@ -171,8 +169,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if(isChangeUser) {
-                    first = !first;
                     connectedThread.write("BT\n");
+                    first = !checked;
+                    Log.e("isChangeUser", isChangeUser + "");
                 }
             }
         });
@@ -326,8 +325,7 @@ public static class ConnectedThread extends Thread {
                 if (buffer[bytes] == '\n'){
                     readMessage = new String(buffer,0,bytes);
                     readMessage = readMessage.replaceAll("[^a-zA-Z0-9_-]", "");
-                    Log.e("Arduino Message","\"" + readMessage + "\"");
-                    if (!readMessage.equals("")) {
+                    if (!readMessage.equals("") && !readMessage.equals("BT")) {
                         handler.obtainMessage(MESSAGE_READ,readMessage).sendToTarget();
                     }
                     bytes = 0;
