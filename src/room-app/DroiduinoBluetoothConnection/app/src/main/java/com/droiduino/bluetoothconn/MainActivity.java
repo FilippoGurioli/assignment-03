@@ -170,8 +170,10 @@ public class MainActivity extends AppCompatActivity {
         priorityCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                first = !first;
-                connectedThread.write("BT\n");
+                if(isChangeUser) {
+                    first = !first;
+                    connectedThread.write("BT\n");
+                }
             }
         });
 
@@ -183,6 +185,9 @@ public class MainActivity extends AppCompatActivity {
             if (isChangeUser) {
                 if (first) {
                     connectedThread.write("BT\n");
+                    isChangeUser = false;
+                    priorityCheck.setChecked(true);
+                    isChangeUser = true;
                     first = false;
                 }
                 connectedThread.write(String.valueOf((int)value) + "\n");
@@ -198,6 +203,9 @@ public class MainActivity extends AppCompatActivity {
                 String cmdText = null;
                 if (first) {
                     connectedThread.write("BT\n");
+                    isChangeUser = false;
+                    priorityCheck.setChecked(true);
+                    isChangeUser = true;
                     first = false;
                 }
                 if (isChecked) {
