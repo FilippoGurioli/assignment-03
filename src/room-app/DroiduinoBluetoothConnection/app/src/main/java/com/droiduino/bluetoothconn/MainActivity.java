@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         priorityCheck.setEnabled(false);
         switchToggle.setText(switchToggle.getTextOff());
         final ImageView imageView = findViewById(R.id.imageView);
-        imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
+        imageView.setImageResource(R.drawable.ic_bulb);
 
 
 
@@ -121,13 +121,13 @@ public class MainActivity extends AppCompatActivity {
                     case MESSAGE_READ:
                         String arduinoMsg = msg.obj.toString(); // Read message from Arduino
                         if (arduinoMsg.equals("ON")) {
-                            imageView.setBackgroundColor(getResources().getColor(R.color.colorOn));
+                            imageView.setImageResource(R.drawable.ic_bulb_light);
                             textViewInfo.setText("Arduino Message : " + arduinoMsg);
                             isChangeUser = false;
                             switchToggle.setChecked(true);
                             isChangeUser = true;
                         } else if (arduinoMsg.equals("OFF")) {
-                            imageView.setBackgroundColor(getResources().getColor(R.color.colorOff));
+                            imageView.setImageResource(R.drawable.ic_bulb);
                             textViewInfo.setText("Arduino Message : " + arduinoMsg);
                             isChangeUser = false;
                             switchToggle.setChecked(false);

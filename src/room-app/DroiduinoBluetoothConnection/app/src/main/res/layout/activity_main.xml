@@ -5,14 +5,14 @@
     android:id="@+id/constrainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/background_light"
+    android:background="#141414"
     tools:context=".MainActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="#22C1C3"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -28,7 +28,7 @@
         android:layout_height="146dp"
         android:layout_marginTop="184dp"
         android:layout_marginEnd="32dp"
-        android:background="@color/colorOff"
+        android:background="#00FFFFFF"
         android:contentDescription="Visual LED"
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,6 +46,7 @@
         android:scaleX="1.5"
         android:scaleY="1.5"
         android:text="Switch"
+        android:textColor="?android:attr/textColorPrimaryInverse"
         android:textOff="Luci spente"
         android:textOn="Luci accese"
         app:layout_constraintBottom_toTopOf="@+id/textViewBlinds"
@@ -106,7 +107,8 @@
         app:layout_constraintBottom_toTopOf="@+id/textViewInfo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewBlinds" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewBlinds"
+        app:thumbColor="?android:attr/textColorPrimaryInverse" />
 
     <TextView
         android:id="@+id/textViewBlinds"
@@ -117,6 +119,7 @@
         android:layout_marginEnd="107dp"
         android:text="Apertura tende"
         android:textAlignment="center"
+        android:textColor="?android:attr/textColorPrimaryInverse"
         android:textSize="22sp"
         app:layout_constraintBottom_toTopOf="@+id/main_slider"
         app:layout_constraintEnd_toEndOf="parent"
@@ -135,6 +138,7 @@
         android:scaleX="1.5"
         android:scaleY="1.5"
         android:text="Controllo manuale"
+        android:textColor="?android:attr/textColorPrimaryInverse"
         app:layout_constraintBottom_toTopOf="@+id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
