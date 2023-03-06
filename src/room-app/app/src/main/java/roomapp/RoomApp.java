@@ -1,4 +1,4 @@
-package com.droiduino.roomapp;
+package roomapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +33,7 @@ import static android.content.ContentValues.TAG;
 
 import com.google.android.material.slider.Slider;
 
-public class MainActivity extends AppCompatActivity {
+public class RoomApp extends AppCompatActivity {
 
     private String deviceName = null;
     private String deviceAddress;
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         priorityCheck.setEnabled(false);
         switchToggle.setText(switchToggle.getTextOff());
         final ImageView imageView = findViewById(R.id.imageView);
-        imageView.setImageResource(R.drawable.ic_bulb);
+        imageView.setImageResource(R.drawable.ic_bulb_light);
 
 
 
@@ -119,13 +119,13 @@ public class MainActivity extends AppCompatActivity {
                     case MESSAGE_READ:
                         String arduinoMsg = msg.obj.toString(); // Read message from Arduino
                         if (arduinoMsg.equals("ON")) {
-                            imageView.setImageResource(R.drawable.ic_bulb_light);
+                            imageView.setImageResource(R.drawable.ic_bulb);
                             textViewInfo.setText("Arduino Message : " + arduinoMsg);
                             isChangeUser = false;
                             switchToggle.setChecked(true);
                             isChangeUser = true;
                         } else if (arduinoMsg.equals("OFF")) {
-                            imageView.setImageResource(R.drawable.ic_bulb);
+                            imageView.setImageResource(R.drawable.ic_bulb_light);
                             textViewInfo.setText("Arduino Message : " + arduinoMsg);
                             isChangeUser = false;
                             switchToggle.setChecked(false);
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             // Move to adapter list
-            Intent intent = new Intent(MainActivity.this, SelectDeviceActivity.class);
+            Intent intent = new Intent(RoomApp.this, SelectDevice.class);
             startActivity(intent);
         }
     });

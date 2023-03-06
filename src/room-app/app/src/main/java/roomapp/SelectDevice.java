@@ -1,4 +1,4 @@
-package com.droiduino.roomapp;
+package roomapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class SelectDeviceActivity extends AppCompatActivity {
+public class SelectDevice extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

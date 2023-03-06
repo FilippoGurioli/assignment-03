@@ -1,4 +1,4 @@
-package com.droiduino.roomapp;
+package roomapp;
 
 public class DeviceInfoModel {
 
