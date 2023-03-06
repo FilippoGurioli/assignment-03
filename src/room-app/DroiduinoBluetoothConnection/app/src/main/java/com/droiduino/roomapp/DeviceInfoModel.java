@@ -1,4 +1,4 @@
-package com.droiduino.bluetoothconn;
+package com.droiduino.roomapp;
 
 public class DeviceInfoModel {
 

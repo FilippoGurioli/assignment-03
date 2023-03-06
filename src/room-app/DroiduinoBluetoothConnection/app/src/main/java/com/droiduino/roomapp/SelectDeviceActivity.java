@@ -1,4 +1,4 @@
-package com.droiduino.bluetoothconn;
+package com.droiduino.roomapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;

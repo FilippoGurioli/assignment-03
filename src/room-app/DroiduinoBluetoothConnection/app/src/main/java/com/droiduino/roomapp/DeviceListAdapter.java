@@ -1,4 +1,4 @@
-package com.droiduino.bluetoothconn;
+package com.droiduino.roomapp;
 
 import android.content.Intent;
 import android.content.Context;
