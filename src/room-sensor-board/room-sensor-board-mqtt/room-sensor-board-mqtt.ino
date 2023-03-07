@@ -12,9 +12,9 @@ LightSensorImpl* lightSensor;
 bool prevPirVal = false;
 bool prevLsVal = false;
 
-const char* ssid = "WINTERFIRE-5G";
-const char* password = "matt1a51lv1avanna5andr00";
-const char* mqtt_server = "192.168.178.22";
+const char* ssid = "FASTWEB-E320F1 - 2.4 GHz";
+const char* password = "8KHCM1JTTC";
+const char* mqtt_server = "192.168.1.204";
 
 /* MQTT topic */
 const char* topic = "pir/pr";
@@ -98,7 +98,7 @@ void loop() {
   client.loop();
 
   unsigned long now = millis();
-  if (now - lastMsgTime > 10000) {
+  if (now - lastMsgTime > 2000) {
     lastMsgTime = now;
 
     //Reading and printing of PIR's value.

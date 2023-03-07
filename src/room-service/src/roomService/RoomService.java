@@ -28,7 +28,7 @@ public class RoomService {
 		new MQTTServer(this);
 		
 		while (true) {
-			Thread.sleep(WAITING_TIME*3);
+			Thread.sleep(WAITING_TIME);
 			this.printStatus();
 			if (this.getMaster() == Master.AUTO) {
 				//-----------------------SERVO AUTO-HANDLING------------------
@@ -40,11 +40,11 @@ public class RoomService {
 				//-----------------------LED AUTO-HANDLING--------------------
 				if (!this.p.isBright() && this.p.isPresent() && this.p.getLed() == Led.OFF) {
 					this.executeCommand(Led.ON);
-				} else if (this.p.getLed() == Led.ON) {
+				} else if ((this.p.isBright() || !this.p.isPresent()) && this.p.getLed() == Led.ON) {
 					this.executeCommand(Led.OFF);
 				}
 			} else {
-				Thread.sleep(WAITING_TIME);
+				Thread.sleep(3 * WAITING_TIME);
 			}
 		}
 	}
